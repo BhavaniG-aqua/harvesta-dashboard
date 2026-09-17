@@ -5,8 +5,20 @@ const FILE_ICONS = {
 };
 
 // A single file row inside the file manager list.
+// If the file has a stored blob URL (uploaded during this session), the
+// download button uses it directly; otherwise it's a mock file with no
+// real content and the button is disabled with a helpful hint.
 function FileRow({ file, onDelete }) {
   const icon = FILE_ICONS[file.type] || "📄";
+  const canDownload = Boolean(file.url);
+
+  function handleDownload() {
+    if (!file.url) return;
+    const a = document.createElement("a");
+    a.href = file.url;
+    a.download = file.name;
+    a.click();
+  }
 
   return (
     <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-3">
@@ -24,9 +36,16 @@ function FileRow({ file, onDelete }) {
       <div className="flex shrink-0 items-center gap-1">
         <button
           type="button"
-          className="rounded-lg px-2 py-1.5 text-sm text-slate-500 hover:bg-slate-100"
+          onClick={handleDownload}
+          disabled={!canDownload}
+          className={[
+            "rounded-lg px-2 py-1.5 text-sm",
+            canDownload
+              ? "text-slate-500 hover:bg-slate-100"
+              : "cursor-not-allowed text-slate-300",
+          ].join(" ")}
           aria-label="Download file"
-          title="Download"
+          title={canDownload ? "Download" : "No file content stored (mock entry)"}
         >
           ⬇️
         </button>

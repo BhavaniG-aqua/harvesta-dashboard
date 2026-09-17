@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import GreetingBanner from "../../components/dashboard/GreetingBanner";
 import NextEventCard from "../../components/dashboard/NextEventCard";
 import UpcomingEventsList from "../../components/dashboard/UpcomingEventsList";
@@ -6,52 +7,41 @@ import HealthSummaryCard from "../../components/dashboard/HealthSummaryCard";
 import InspirationCard from "../../components/dashboard/InspirationCard";
 import TodayFocusList from "../../components/dashboard/TodayFocusList";
 import SectionTitle from "../../components/common/SectionTitle";
-import {
-  placementEventsMock,
-  healthDailyLogsMock,
-  fruitRemindersMock,
-  inspirationContentMock,
-  settingsMock,
-} from "../../data/mockData";
+import { usePlacementsContext } from "../../services/PlacementsContext";
+import { useHealthContext } from "../../services/HealthContext";
+import { useInspirationContext } from "../../services/InspirationContext";
+import { useSettingsContext } from "../../services/SettingsContext";
 
 function DashboardPage() {
+  const { events } = usePlacementsContext();
+  const { todayLog, pendingReminders } = useHealthContext();
+  const { getRandomItem } = useInspirationContext();
+  const { settings } = useSettingsContext();
+
   const sortedEvents = useMemo(
-    () =>
-      [...placementEventsMock].sort(
-        (a, b) => new Date(a.date) - new Date(b.date)
-      ),
-    []
+    () => [...events].sort((a, b) => new Date(a.date) - new Date(b.date)),
+    [events]
   );
 
   const [nextEvent, ...restEvents] = sortedEvents;
 
-  // Today's health log is the most recent entry for now (mock data has no
-  // guaranteed "today" row).
-  const todayLog = healthDailyLogsMock[0] ?? null;
-
-  // Today's focus: any pending fruit reminder for "today" (first mock date).
   const todayFocusItems = useMemo(() => {
-    const pending = fruitRemindersMock.filter((r) => !r.done);
-    if (pending.length === 0) return [];
+    if (pendingReminders.length === 0) return [];
     return [
       {
         id: "focus-fruit",
         icon: "🍎",
-        label: `Buy fruits reminder pending (${pending.length})`,
+        label: `Buy fruits reminder pending (${pendingReminders.length})`,
       },
     ];
-  }, []);
+  }, [pendingReminders]);
 
-  // Picked once when the component mounts (not on every render).
-  const [inspirationItem] = useState(() => {
-    const pool = inspirationContentMock;
-    if (pool.length === 0) return null;
-    return pool[Math.floor(Math.random() * pool.length)];
-  });
+  // Picked once per page load (not on every render).
+  const inspirationItem = useMemo(() => getRandomItem(), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="flex flex-col gap-6">
-      <GreetingBanner name={settingsMock.friendName} />
+      <GreetingBanner name={settings.friendName} />
 
       <NextEventCard event={nextEvent} />
 
@@ -73,6 +63,12 @@ function DashboardPage() {
       <div>
         <SectionTitle>Inspiration</SectionTitle>
         <InspirationCard item={inspirationItem} />
+        <Link
+          to="/inspiration"
+          className="mt-2 inline-block text-xs font-medium text-brand-600 hover:underline"
+        >
+          See more →
+        </Link>
       </div>
     </div>
   );

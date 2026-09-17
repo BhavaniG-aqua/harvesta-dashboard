@@ -1,17 +1,18 @@
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import PageHeader from "../../components/common/PageHeader";
 import Button from "../../components/common/Button";
 import PlacementCard from "../../components/placements/PlacementCard";
 import EmptyState from "../../components/common/EmptyState";
-import { placementEventsMock } from "../../data/mockData";
+import { usePlacementsContext } from "../../services/PlacementsContext";
 
 function PlacementsListPage() {
+  const { events } = usePlacementsContext();
+  const navigate = useNavigate();
+
   const sortedEvents = useMemo(
-    () =>
-      [...placementEventsMock].sort(
-        (a, b) => new Date(a.date) - new Date(b.date)
-      ),
-    []
+    () => [...events].sort((a, b) => new Date(a.date) - new Date(b.date)),
+    [events]
   );
 
   return (
@@ -19,7 +20,7 @@ function PlacementsListPage() {
       <PageHeader
         title="Placements"
         subtitle="Companies coming for campus placements"
-        action={<Button>+ Add</Button>}
+        action={<Button onClick={() => navigate("/placements/new")}>+ Add</Button>}
       />
 
       {sortedEvents.length === 0 ? (

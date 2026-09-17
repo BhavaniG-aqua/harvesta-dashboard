@@ -5,11 +5,11 @@ import MealCountSelector from "../../components/health/MealCountSelector";
 import SleepInput from "../../components/health/SleepInput";
 import FruitReminderCard from "../../components/health/FruitReminderCard";
 import RecentHistoryList from "../../components/health/RecentHistoryList";
-import { useHealthData } from "../../hooks/useHealthData";
+import { useHealthContext } from "../../services/HealthContext";
 
 function HealthPage() {
   const { logs, todayLog, upsertTodayLog, pendingReminders, markReminderDone } =
-    useHealthData();
+    useHealthContext();
 
   const recentLogs = logs.slice(0, 5);
 

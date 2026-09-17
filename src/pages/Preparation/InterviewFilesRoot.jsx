@@ -7,7 +7,7 @@ import { useInterviewFilesContext } from "../../services/InterviewFilesContext";
 
 // Root of the Interview Preparation file manager (top-level folders only).
 function InterviewFilesRootPage() {
-  const { getChildFolders, addFolder, deleteFolder } =
+  const { getChildFolders, addFolder, renameFolder, deleteFolder } =
     useInterviewFilesContext();
 
   const rootFolders = getChildFolders(null);
@@ -41,6 +41,7 @@ function InterviewFilesRootPage() {
               key={folder.id}
               folder={folder}
               onDelete={deleteFolder}
+              onRename={renameFolder}
             />
           ))}
         </div>

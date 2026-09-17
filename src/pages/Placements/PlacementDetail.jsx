@@ -1,14 +1,23 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import BackLink from "../../components/common/BackLink";
 import Card from "../../components/common/Card";
 import DetailRow from "../../components/common/DetailRow";
 import EmptyState from "../../components/common/EmptyState";
+import Button from "../../components/common/Button";
+import ConfirmButton from "../../components/common/ConfirmButton";
 import { formatShortDate } from "../../utils/date";
-import { placementEventsMock } from "../../data/mockData";
+import { usePlacementsContext } from "../../services/PlacementsContext";
 
 function PlacementDetailPage() {
   const { eventId } = useParams();
-  const event = placementEventsMock.find((e) => e.id === eventId);
+  const navigate = useNavigate();
+  const { getEvent, deleteEvent } = usePlacementsContext();
+  const event = getEvent(eventId);
+
+  function handleDelete() {
+    deleteEvent(eventId);
+    navigate("/placements");
+  }
 
   return (
     <div>
@@ -18,11 +27,21 @@ function PlacementDetailPage() {
         <EmptyState icon="🔍" title="Event not found" />
       ) : (
         <>
-          <div className="mb-4">
-            <h1 className="text-xl font-semibold text-slate-900">
-              {event.company}
-            </h1>
-            <p className="text-sm text-slate-500">{event.role}</p>
+          <div className="mb-4 flex items-start justify-between gap-3">
+            <div>
+              <h1 className="text-xl font-semibold text-slate-900">
+                {event.company}
+              </h1>
+              <p className="text-sm text-slate-500">{event.role}</p>
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <Button
+                variant="secondary"
+                onClick={() => navigate(`/placements/${eventId}/edit`)}
+              >
+                ✏️ Edit
+              </Button>
+            </div>
           </div>
 
           <Card padded={false}>
@@ -39,6 +58,14 @@ function PlacementDetailPage() {
               <DetailRow label="Additional Notes" value={event.notes} />
             </div>
           </Card>
+
+          <div className="mt-4">
+            <ConfirmButton
+              label="🗑️ Delete Event"
+              confirmLabel="Delete this event?"
+              onConfirm={handleDelete}
+            />
+          </div>
         </>
       )}
     </div>

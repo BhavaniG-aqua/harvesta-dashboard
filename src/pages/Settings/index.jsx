@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import PageHeader from "../../components/common/PageHeader";
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
-import { settingsMock } from "../../data/mockData";
+import { useSettingsContext } from "../../services/SettingsContext";
 
 const ALL_DAYS = [
   "Sunday",
@@ -15,16 +16,29 @@ const ALL_DAYS = [
 ];
 
 function SettingsPage() {
-  const [friendName, setFriendName] = useState(settingsMock.friendName);
-  const [reminderDays, setReminderDays] = useState(settingsMock.reminderDays);
-  const [reminderTimes, setReminderTimes] = useState(
-    settingsMock.reminderTimes.join(", ")
+  const { settings, updateSettings } = useSettingsContext();
+  const [friendName, setFriendName] = useState(settings.friendName);
+  const [reminderDays, setReminderDays] = useState(settings.reminderDays);
+  const [reminderTimesText, setReminderTimesText] = useState(
+    settings.reminderTimes.join(", ")
   );
+  const [saved, setSaved] = useState(false);
 
   function toggleDay(day) {
     setReminderDays((prev) =>
       prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
     );
+  }
+
+  function handleSave() {
+    const reminderTimes = reminderTimesText
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+
+    updateSettings({ friendName, reminderDays, reminderTimes });
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   }
 
   return (
@@ -76,15 +90,29 @@ function SettingsPage() {
             Reminder Times (comma-separated)
           </span>
           <input
-            value={reminderTimes}
-            onChange={(e) => setReminderTimes(e.target.value)}
+            value={reminderTimesText}
+            onChange={(e) => setReminderTimesText(e.target.value)}
             placeholder="09:00, 14:00, 20:00"
             className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
           />
         </label>
       </Card>
 
-      <Button className="self-start">💾 Save Settings</Button>
+      <div className="flex items-center gap-3">
+        <Button className="self-start" onClick={handleSave}>
+          💾 Save Settings
+        </Button>
+        {saved ? (
+          <span className="text-xs font-medium text-emerald-600">Saved ✓</span>
+        ) : null}
+      </div>
+
+      <Link
+        to="/inspiration"
+        className="text-sm font-medium text-brand-600 hover:underline"
+      >
+        ✨ Manage Inspiration Content →
+      </Link>
     </div>
   );
 }

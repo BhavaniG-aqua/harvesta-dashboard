@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import BackLink from "../../components/common/BackLink";
 import FolderBreadcrumb from "../../components/files/FolderBreadcrumb";
@@ -19,6 +19,7 @@ function InterviewFolderDetailPage() {
     getFilesInFolder,
     getBreadcrumb,
     addFolder,
+    renameFolder,
     addFile,
     deleteFolder,
     deleteFile,
@@ -28,6 +29,9 @@ function InterviewFolderDetailPage() {
   const childFolders = getChildFolders(folderId);
   const filesHere = getFilesInFolder(folderId);
   const trail = getBreadcrumb(folderId);
+
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [titleValue, setTitleValue] = useState(folder?.name || "");
 
   if (!folder) {
     return (
@@ -48,6 +52,7 @@ function InterviewFolderDetailPage() {
       name: file.name,
       type,
       size: `${Math.max(1, Math.round(file.size / 1024))} KB`,
+      url: URL.createObjectURL(file),
     });
     e.target.value = "";
   }
@@ -57,12 +62,44 @@ function InterviewFolderDetailPage() {
     navigate("/preparation/files");
   }
 
+  function commitTitleRename() {
+    const trimmed = titleValue.trim();
+    if (trimmed && trimmed !== folder.name) {
+      renameFolder(folder.id, trimmed);
+    } else {
+      setTitleValue(folder.name);
+    }
+    setEditingTitle(false);
+  }
+
   return (
     <div>
       <FolderBreadcrumb trail={trail} />
 
       <div className="mb-4 flex items-center justify-between gap-2">
-        <h1 className="text-lg font-semibold text-slate-900">{folder.name}</h1>
+        {editingTitle ? (
+          <input
+            autoFocus
+            value={titleValue}
+            onChange={(e) => setTitleValue(e.target.value)}
+            onBlur={commitTitleRename}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") commitTitleRename();
+              if (e.key === "Escape") {
+                setTitleValue(folder.name);
+                setEditingTitle(false);
+              }
+            }}
+            className="rounded-lg border border-brand-300 px-2 py-1 text-lg font-semibold outline-none"
+          />
+        ) : (
+          <h1
+            className="text-lg font-semibold text-slate-900"
+            onClick={() => setEditingTitle(true)}
+          >
+            {folder.name} <span className="text-xs text-slate-400">✏️</span>
+          </h1>
+        )}
         <button
           type="button"
           onClick={handleDeleteFolder}
@@ -92,7 +129,12 @@ function InterviewFolderDetailPage() {
       {childFolders.length > 0 ? (
         <div className="mb-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
           {childFolders.map((f) => (
-            <FolderCard key={f.id} folder={f} onDelete={deleteFolder} />
+            <FolderCard
+              key={f.id}
+              folder={f}
+              onDelete={deleteFolder}
+              onRename={renameFolder}
+            />
           ))}
         </div>
       ) : null}

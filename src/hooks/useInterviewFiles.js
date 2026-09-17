@@ -1,12 +1,24 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
+import { useLocalStorageState } from "./useLocalStorageState";
 import { interviewFoldersMock, interviewFilesMock } from "../data/mockData";
 
-// Local state hook for the Interview Preparation file/folder manager.
+// Persisted state hook for the Interview Preparation file/folder manager.
 // Mirrors the future `interview_folders` / `interview_files` tables
-// (folder.parent_folder_id supports arbitrary nesting).
+// (folder.parentFolderId supports arbitrary nesting).
+//
+// Note: uploaded file "content" (object URL) is kept in-memory only
+// (not persisted) since object URLs / blobs cannot be serialized to
+// localStorage. In Phase 8 this will be replaced by real Supabase
+// Storage URLs which ARE safe to persist.
 export function useInterviewFiles() {
-  const [folders, setFolders] = useState(interviewFoldersMock);
-  const [files, setFiles] = useState(interviewFilesMock);
+  const [folders, setFolders] = useLocalStorageState(
+    "dashboard.interviewFolders",
+    interviewFoldersMock
+  );
+  const [files, setFiles] = useLocalStorageState(
+    "dashboard.interviewFiles",
+    interviewFilesMock
+  );
 
   const getChildFolders = useCallback(
     (parentFolderId) =>
@@ -38,57 +50,73 @@ export function useInterviewFiles() {
     [folders]
   );
 
-  const addFolder = useCallback((parentFolderId, name) => {
-    setFolders((prev) => [
-      ...prev,
-      { id: `fol-${Date.now()}`, name, parentFolderId },
-    ]);
-  }, []);
+  const addFolder = useCallback(
+    (parentFolderId, name) => {
+      setFolders((prev) => [
+        ...prev,
+        { id: `fol-${Date.now()}`, name, parentFolderId },
+      ]);
+    },
+    [setFolders]
+  );
 
-  const renameFolder = useCallback((folderId, name) => {
-    setFolders((prev) =>
-      prev.map((f) => (f.id === folderId ? { ...f, name } : f))
-    );
-  }, []);
+  const renameFolder = useCallback(
+    (folderId, name) => {
+      setFolders((prev) =>
+        prev.map((f) => (f.id === folderId ? { ...f, name } : f))
+      );
+    },
+    [setFolders]
+  );
 
   // Deletes a folder and, recursively, all of its descendant folders/files.
-  const deleteFolder = useCallback((folderId) => {
-    setFolders((prevFolders) => {
-      const idsToDelete = new Set([folderId]);
-      let changed = true;
-      while (changed) {
-        changed = false;
-        for (const f of prevFolders) {
-          if (idsToDelete.has(f.parentFolderId) && !idsToDelete.has(f.id)) {
-            idsToDelete.add(f.id);
-            changed = true;
+  const deleteFolder = useCallback(
+    (folderId) => {
+      setFolders((prevFolders) => {
+        const idsToDelete = new Set([folderId]);
+        let changed = true;
+        while (changed) {
+          changed = false;
+          for (const f of prevFolders) {
+            if (idsToDelete.has(f.parentFolderId) && !idsToDelete.has(f.id)) {
+              idsToDelete.add(f.id);
+              changed = true;
+            }
           }
         }
-      }
-      setFiles((prevFiles) =>
-        prevFiles.filter((file) => !idsToDelete.has(file.folderId))
-      );
-      return prevFolders.filter((f) => !idsToDelete.has(f.id));
-    });
-  }, []);
+        setFiles((prevFiles) =>
+          prevFiles.filter((file) => !idsToDelete.has(file.folderId))
+        );
+        return prevFolders.filter((f) => !idsToDelete.has(f.id));
+      });
+    },
+    [setFolders, setFiles]
+  );
 
-  const addFile = useCallback((folderId, file) => {
-    setFiles((prev) => [
-      ...prev,
-      {
-        id: `file-${Date.now()}`,
-        folderId,
-        name: file.name,
-        type: file.type || "file",
-        size: file.size || "",
-        createdAt: new Date().toISOString().slice(0, 10),
-      },
-    ]);
-  }, []);
+  const addFile = useCallback(
+    (folderId, file) => {
+      setFiles((prev) => [
+        ...prev,
+        {
+          id: `file-${Date.now()}`,
+          folderId,
+          name: file.name,
+          type: file.type || "file",
+          size: file.size || "",
+          url: file.url || null,
+          createdAt: new Date().toISOString().slice(0, 10),
+        },
+      ]);
+    },
+    [setFiles]
+  );
 
-  const deleteFile = useCallback((fileId) => {
-    setFiles((prev) => prev.filter((f) => f.id !== fileId));
-  }, []);
+  const deleteFile = useCallback(
+    (fileId) => {
+      setFiles((prev) => prev.filter((f) => f.id !== fileId));
+    },
+    [setFiles]
+  );
 
   return {
     folders,

@@ -4,7 +4,9 @@ import PreparationTabs from "../../components/preparation/PreparationTabs";
 import CategoryTabs from "../../components/preparation/CategoryTabs";
 import StatusFilterTabs from "../../components/preparation/StatusFilterTabs";
 import TopicItem from "../../components/preparation/TopicItem";
+import ManageCategoriesPanel from "../../components/preparation/ManageCategoriesPanel";
 import InlineAddForm from "../../components/common/InlineAddForm";
+import Button from "../../components/common/Button";
 import EmptyState from "../../components/common/EmptyState";
 import { usePreparationData } from "../../hooks/usePreparationData";
 
@@ -13,13 +15,17 @@ function PreparationTopicsPage() {
     categories,
     topics,
     addCategory,
+    renameCategory,
+    deleteCategory,
     addTopic,
+    renameTopic,
     updateTopicStatus,
     deleteTopic,
   } = usePreparationData();
 
   const [activeCategoryId, setActiveCategoryId] = useState(null);
   const [activeStatus, setActiveStatus] = useState("ALL");
+  const [managingCategories, setManagingCategories] = useState(false);
 
   const filteredTopics = useMemo(() => {
     return topics.filter((t) => {
@@ -81,7 +87,26 @@ function PreparationTopicsPage() {
           buttonLabel="+ Topic"
           onSubmit={handleAddTopic}
         />
+        <Button
+          variant="secondary"
+          onClick={() => setManagingCategories((v) => !v)}
+        >
+          {managingCategories ? "Done" : "⚙️ Manage Categories"}
+        </Button>
       </div>
+
+      {managingCategories ? (
+        <div className="mb-4">
+          <ManageCategoriesPanel
+            categories={categories}
+            onRename={renameCategory}
+            onDelete={(id) => {
+              deleteCategory(id);
+              if (activeCategoryId === id) setActiveCategoryId(null);
+            }}
+          />
+        </div>
+      ) : null}
 
       {filteredTopics.length === 0 ? (
         <EmptyState
@@ -97,6 +122,7 @@ function PreparationTopicsPage() {
               topic={topic}
               onStatusChange={updateTopicStatus}
               onDelete={deleteTopic}
+              onRename={renameTopic}
             />
           ))}
         </div>

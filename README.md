@@ -1,4 +1,4 @@
-# Friend Dashboard — Phase 1 (React Foundation)
+# Friend Dashboard — Phases 1–7 (React Frontend Complete)
 
 A lightweight, mobile-first personal dashboard built for a friend's campus
 placement season. See `Personal_Dashboard_Master_Context.md` in the repo
@@ -9,7 +9,9 @@ root for the full product spec and constraints.
 - React 19 + Vite
 - React Router v7
 - Tailwind CSS v4 (via `@tailwindcss/vite`)
-- Mock data only for now — no backend yet (Supabase comes in Phase 8)
+- **No backend yet.** All data lives in `localStorage` via small domain
+  hooks (see `src/hooks/`) wrapped in React Context providers
+  (`src/services/`). Supabase integration is Phase 8 — not started.
 
 ## Getting Started
 
@@ -17,77 +19,109 @@ root for the full product spec and constraints.
 npm install
 npm run dev       # start dev server
 npm run build     # production build
-npm run lint       # oxlint
-npm run preview    # preview production build
+npm run lint      # oxlint
+npm run preview   # preview production build
 ```
+
+## What's Implemented (Phases 1–7)
+
+| Phase | Area | Status |
+|-------|------|--------|
+| 1 | React foundation, routing, mobile-first layout | ✅ |
+| 2 | Placements — create / edit / delete events | ✅ |
+| 3 | Preparation — categories & topics CRUD, rename, status filters | ✅ |
+| 4 | Interview File Manager — nested folders, rename, upload/download, delete | ✅ |
+| 5 | Health — daily log, fruit reminders driven by Settings | ✅ |
+| 6 | Notes — create/edit/delete/download/search, image insert | ✅ |
+| 7 | Inspiration — manage motivation/funny content, shown on Dashboard | ✅ |
+| 8 | Supabase (Postgres + Storage) integration | ⏳ Not started |
+
+All data persists across page reloads via `localStorage` (see
+`useLocalStorageState`). Uploaded files/images use in-memory blob URLs,
+which do **not** survive a reload — this is expected and will be replaced
+by real Supabase Storage URLs in Phase 8.
 
 ## Project Structure
 
 ```
 src/
-├── assets/            # static assets (images, icons)
+├── assets/
 ├── components/
-│   ├── layout/         # AppLayout shell (sidebar + bottom nav + outlet)
-│   ├── navigation/      # Sidebar, BottomNav, NavItems (shared nav config)
-│   ├── dashboard/        # Dashboard-only presentational components
-│   ├── placements/        # Placement card, etc.
-│   ├── preparation/         # Category tabs, status filters, topic item
-│   ├── health/               # Toggle, meal selector, sleep input, reminder
-│   ├── notes/                  # Note card
-│   ├── files/                    # Folder/file manager UI pieces
-│   ├── motivation/                 # (reserved for Phase 7)
-│   └── common/                       # Button, Card, PageHeader, etc.
+│   ├── layout/          # AppLayout shell (sidebar + bottom nav + outlet)
+│   ├── navigation/        # Sidebar, BottomNav, NavItems (shared nav config)
+│   ├── dashboard/          # Dashboard-only presentational components
+│   ├── placements/          # Placement card
+│   ├── preparation/           # Category tabs, status filters, topic item, manage panel
+│   ├── health/                  # Toggle, meal selector, sleep input, reminder card
+│   ├── notes/                     # Note card
+│   ├── files/                       # Folder/file manager UI pieces
+│   ├── motivation/                    # Inspiration item card, add form
+│   └── common/                          # Button, Card, PageHeader, FormField, ConfirmButton, etc.
 ├── pages/
 │   ├── Dashboard/
-│   ├── Placements/         (+ PlacementDetail)
-│   ├── Preparation/         (+ InterviewFilesRoot, InterviewFolderDetail)
+│   ├── Placements/          (+ PlacementDetail, PlacementForm)
+│   ├── Preparation/           (+ InterviewFilesRoot, InterviewFolderDetail)
 │   ├── Health/
-│   ├── Notes/                (+ NoteEditor)
+│   ├── Notes/                    (+ NoteEditor)
+│   ├── Inspiration/
 │   └── Settings/
 ├── data/
-│   └── mockData.js    # all mock data, shaped like the future Supabase schema
-├── hooks/              # usePreparationData, useInterviewFiles, useHealthData, useNotesData
-├── services/           # React context providers wrapping the hooks above
-├── utils/              # date helpers
-├── App.jsx             # routes
+│   └── mockData.js       # seed data, shaped like the future Supabase schema
+├── hooks/                  # one hook per domain; all persisted via useLocalStorageState
+├── services/                 # Context providers wrapping the hooks above
+├── utils/                       # date helpers
+├── App.jsx                        # routes + provider tree
 └── main.jsx
 ```
 
 ## Routes
 
-| Path                              | Page                          |
-| ---------------------------------- | ------------------------------ |
-| `/`                                | Dashboard                      |
-| `/placements`                     | Placements list                |
-| `/placements/:eventId`            | Placement detail               |
-| `/preparation`                    | Preparation Topics tracker      |
-| `/preparation/files`              | Interview Prep file manager root |
-| `/preparation/files/:folderId`    | Folder detail (nested)          |
-| `/health`                         | Health habit tracker            |
-| `/notes`                          | Notes list                      |
-| `/notes/:noteId`                  | Note editor                     |
-| `/settings`                       | Settings                        |
+| Path                              | Page                             |
+| ---------------------------------- | --------------------------------- |
+| `/`                                | Dashboard                         |
+| `/placements`                     | Placements list                   |
+| `/placements/new`                 | Add placement event                |
+| `/placements/:eventId`            | Placement detail                   |
+| `/placements/:eventId/edit`       | Edit placement event               |
+| `/preparation`                    | Preparation Topics tracker         |
+| `/preparation/files`              | Interview Prep file manager root    |
+| `/preparation/files/:folderId`    | Folder detail (nested)              |
+| `/health`                         | Health habit tracker                |
+| `/notes`                          | Notes list                          |
+| `/notes/:noteId`                  | Note editor                         |
+| `/inspiration`                    | Manage motivation/funny content      |
+| `/settings`                       | Settings                            |
 
 ## Notes on Implementation
 
-- **No CSE/IT bias**: Preparation categories/topics are fully user-defined
-  (see `usePreparationData`), matching the master context's EEE/core focus.
+- **No CSE/IT bias**: Preparation categories/topics are fully user-defined.
 - **Nested folders**: `useInterviewFiles` models folders with
-  `parentFolderId`, mirroring the intended Supabase schema.
+  `parentFolderId`, mirroring the intended Supabase schema. Folders and
+  files support create/rename/delete; files support upload/download
+  (download only works for files uploaded in the current session, since
+  blob URLs aren't persisted).
 - **No progress-based motivation on the Dashboard**: only a single random
-  quote/joke is shown; no completion stats, streaks, etc.
+  quote/joke is shown; no completion stats, streaks, etc. Full
+  Inspiration management lives at `/inspiration` (reachable via a "See
+  more" link on the Dashboard and a link on Settings) — kept out of the
+  main 6-item bottom nav per the master context's Section 8 spec.
+- **Settings-driven reminders**: `useHealthData` reads `reminderDays` /
+  `reminderTimes` from Settings and auto-generates today's fruit reminders
+  if today is a configured day. Reminders stay "pending" until marked
+  DONE, so they naturally persist across days until dismissed.
 - **Mobile-first**: `AppLayout` renders a bottom tab bar on mobile and a
   sidebar on desktop (`md:` breakpoint switch).
-- All data is currently in-memory (via hooks + mock seed data). Swapping
-  to Supabase later means replacing the *inside* of these hooks — the
+- **Persistence today, Supabase tomorrow**: all domain hooks
+  (`usePlacementsData`, `usePreparationData`, `useInterviewFiles`,
+  `useHealthData`, `useNotesData`, `useInspirationData`,
+  `useSettingsData`) use `useLocalStorageState` internally. Swapping to
+  Supabase later means replacing the *inside* of these hooks — the
   components' props/behavior should not need to change.
 
 ## Next Steps (do not start automatically — wait for instruction)
 
-- Phase 2: Placement calendar create/edit forms
-- Phase 3: Preparation category/topic edit + delete polish
-- Phase 4: Interview file manager polish (drag/drop, rename)
-- Phase 5: Health — richer reminder scheduling logic
-- Phase 6: Notes — richer rich-text editor if needed
-- Phase 7: Inspiration — dedicated page/content rotation
-- Phase 8: Supabase integration (Postgres + Storage)
+- Phase 8: Supabase integration (Postgres + Storage), replacing
+  `useLocalStorageState` with real Supabase calls inside each hook, and
+  wiring RLS policies carefully since there's no authentication.
+- Phase 9: Testing (mobile/desktop, file upload/download, persistence).
+- Phase 10: Deployment to Cloudflare Pages via GitHub.

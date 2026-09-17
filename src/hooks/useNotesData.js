@@ -1,11 +1,14 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
+import { useLocalStorageState } from "./useLocalStorageState";
 import { notesMock } from "../data/mockData";
 
 const todayStr = () => new Date().toISOString().slice(0, 10);
 
-// Local state hook for General Notes.
+// Persisted state hook for General Notes.
+// Note: inserted image blob URLs are session-only (they expire on reload)
+// until Phase 8 swaps them for real Supabase Storage URLs.
 export function useNotesData() {
-  const [notes, setNotes] = useState(notesMock);
+  const [notes, setNotes] = useLocalStorageState("dashboard.notes", notesMock);
 
   const getNote = useCallback(
     (id) => notes.find((n) => n.id === id) || null,
@@ -19,19 +22,25 @@ export function useNotesData() {
       ...prev,
     ]);
     return id;
-  }, []);
+  }, [setNotes]);
 
-  const updateNote = useCallback((id, partial) => {
-    setNotes((prev) =>
-      prev.map((n) =>
-        n.id === id ? { ...n, ...partial, updatedAt: todayStr() } : n
-      )
-    );
-  }, []);
+  const updateNote = useCallback(
+    (id, partial) => {
+      setNotes((prev) =>
+        prev.map((n) =>
+          n.id === id ? { ...n, ...partial, updatedAt: todayStr() } : n
+        )
+      );
+    },
+    [setNotes]
+  );
 
-  const deleteNote = useCallback((id) => {
-    setNotes((prev) => prev.filter((n) => n.id !== id));
-  }, []);
+  const deleteNote = useCallback(
+    (id) => {
+      setNotes((prev) => prev.filter((n) => n.id !== id));
+    },
+    [setNotes]
+  );
 
   return { notes, getNote, createNote, updateNote, deleteNote };
 }

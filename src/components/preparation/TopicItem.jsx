@@ -1,14 +1,52 @@
+import { useState } from "react";
 import Card from "../common/Card";
 import StatusPill from "../common/StatusPill";
 
 const STATUS_OPTIONS = ["NEW", "COMPLETED", "REVISE"];
 
-// A single preparation topic row with inline status switcher.
-function TopicItem({ topic, onStatusChange, onDelete }) {
+// A single preparation topic row with inline status switcher and
+// inline rename support (click the name to edit it).
+function TopicItem({ topic, onStatusChange, onDelete, onRename }) {
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(topic.name);
+
+  function commitRename() {
+    const trimmed = name.trim();
+    if (trimmed && trimmed !== topic.name) {
+      onRename?.(topic.id, trimmed);
+    } else {
+      setName(topic.name);
+    }
+    setEditing(false);
+  }
+
   return (
     <Card className="flex flex-col gap-3">
       <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-medium text-slate-800">{topic.name}</p>
+        {editing ? (
+          <input
+            autoFocus
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            onBlur={commitRename}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") commitRename();
+              if (e.key === "Escape") {
+                setName(topic.name);
+                setEditing(false);
+              }
+            }}
+            className="w-full rounded-lg border border-brand-300 px-2 py-1 text-sm outline-none"
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={() => setEditing(true)}
+            className="text-left text-sm font-medium text-slate-800"
+          >
+            {topic.name}
+          </button>
+        )}
         <StatusPill status={topic.status} />
       </div>
 
