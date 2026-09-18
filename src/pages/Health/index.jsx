@@ -1,30 +1,21 @@
 import PageHeader from "../../components/common/PageHeader";
 import SectionTitle from "../../components/common/SectionTitle";
-import NotificationPermissionBanner from "../../components/common/NotificationPermissionBanner";
 import ToggleCheck from "../../components/health/ToggleCheck";
 import MealCountSelector from "../../components/health/MealCountSelector";
 import SleepInput from "../../components/health/SleepInput";
 import FruitReminderCard from "../../components/health/FruitReminderCard";
 import RecentHistoryList from "../../components/health/RecentHistoryList";
 import { useHealthContext } from "../../services/HealthContext";
-import { useFruitReminderNotifications } from "../../hooks/useFruitReminderNotifications";
 
 function HealthPage() {
-  const { logs, todayLog, upsertTodayLog, reminders, pendingReminders, markReminderDone } =
+  const { logs, todayLog, upsertTodayLog, pendingReminders, markReminderDone } =
     useHealthContext();
-  const { permission, requestPermission } = useFruitReminderNotifications(reminders);
 
   const recentLogs = logs.slice(0, 5);
 
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title="Health" subtitle="Quick daily habit tracker" />
-
-      <NotificationPermissionBanner
-        permission={permission}
-        onRequest={requestPermission}
-        description="Get a silent notification when it's time to buy fruits (only while this tab is open)."
-      />
 
       <div>
         <SectionTitle>Today</SectionTitle>

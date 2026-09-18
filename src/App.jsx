@@ -1,7 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppLayout from "./components/layout/AppLayout";
-import EventRemindersWatcher from "./components/common/EventRemindersWatcher";
-import FruitRemindersWatcher from "./components/common/FruitRemindersWatcher";
 import { SettingsProvider } from "./services/SettingsContext";
 import { PlacementsProvider } from "./services/PlacementsContext";
 import { InterviewFilesProvider } from "./services/InterviewFilesContext";
@@ -31,8 +29,6 @@ function App() {
             <NotesProvider>
               <InspirationProvider>
                 <HealthProvider>
-                  <EventRemindersWatcher />
-                  <FruitRemindersWatcher />
                   <Routes>
                     <Route element={<AppLayout />}>
                       <Route index element={<DashboardPage />} />

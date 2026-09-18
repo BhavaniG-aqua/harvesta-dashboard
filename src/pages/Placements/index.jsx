@@ -6,15 +6,12 @@ import PlacementCard from "../../components/placements/PlacementCard";
 import PlacementCalendar from "../../components/placements/PlacementCalendar";
 import SelectedDayEvents from "../../components/placements/SelectedDayEvents";
 import ViewToggle from "../../components/placements/ViewToggle";
-import NotificationPermissionBanner from "../../components/common/NotificationPermissionBanner";
 import EmptyState from "../../components/common/EmptyState";
 import { usePlacementsContext } from "../../services/PlacementsContext";
-import { useEventReminders } from "../../hooks/useEventReminders";
 import { toDateKey } from "../../utils/date";
 
 function PlacementsListPage() {
   const { events } = usePlacementsContext();
-  const { permission, requestPermission } = useEventReminders(events);
   const navigate = useNavigate();
   const [view, setView] = useState("list");
   const [selectedDateKey, setSelectedDateKey] = useState(() =>
@@ -57,12 +54,6 @@ function PlacementsListPage() {
       <div className="mb-4">
         <ViewToggle view={view} onChange={setView} />
       </div>
-
-      <NotificationPermissionBanner
-        permission={permission}
-        onRequest={requestPermission}
-        description="Get a silent notification 1 day and 1 hour before each placement event (only while this tab is open)."
-      />
 
       {view === "calendar" ? (
         <div className="flex flex-col gap-4">
