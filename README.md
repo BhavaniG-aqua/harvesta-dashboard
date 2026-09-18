@@ -8,7 +8,7 @@ root for the full product spec and constraints.
 
 - React 19 + Vite
 - React Router v7
-- Tailwind CSS v4 (via `@tailwindcss/vite`) — custom teal + amber palette (see `src/index.css` `@theme`)
+- Tailwind CSS v4 (via `@tailwindcss/vite`) — custom teal + amber palette (see `src/index.css` `@theme`), with a full light/dark theme toggle (`ThemeContext` + `ThemeToggle`, class-based via `@custom-variant dark`)
 - `mammoth` (docx → HTML) and `xlsx` (xls/xlsx/csv → table) for in-browser file preview, both lazy-loaded via dynamic `import()` so they don't bloat the initial bundle
 - **No backend yet.** All data lives in `localStorage` via small domain
   hooks (see `src/hooks/`) wrapped in React Context providers
@@ -108,6 +108,15 @@ src/
   calendar (`PlacementCalendar`) shows a month grid with a dot on any day
   that has an event; selecting a day shows that day's events below
   (`SelectedDayEvents`).
+- **Light/dark theme toggle**: `ThemeContext` tracks `theme` ("light" |
+  "dark"), persists the choice in `localStorage` (`dashboard.theme`), and
+  respects the OS/browser `prefers-color-scheme` on first visit. It syncs
+  a `dark` class onto `<html>`, which Tailwind's `dark:` variant
+  (`@custom-variant dark` in `index.css`) responds to. Every component
+  with a background/text/border color has a matching `dark:` variant —
+  the `ThemeToggle` button (🌙/☀️) lives in the desktop Sidebar footer, at
+  the top of the mobile content area, and again on the Settings page for
+  discoverability.
 - **File preview & editing (`FileViewerModal`)**: clicking any file row
   (Interview Prep files, Note attachments) opens a modal that renders:
   images and SVG inline, PDFs via `<iframe>`, `.txt`/`.py` as editable

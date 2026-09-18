@@ -69,7 +69,7 @@ function HealthPage() {
       {tab === "today" ? (
         <div className="flex flex-col gap-3">
           <div className="mb-1 flex items-center justify-between gap-3">
-            <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+            <p className="text-sm font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
               {formatShortDate(dateKey)}
             </p>
             <DaySelector selected={selectedDay} onChange={setSelectedDay} />
@@ -105,7 +105,7 @@ function HealthPage() {
               💾 Save
             </Button>
             {saved ? (
-              <span className="text-xs font-medium text-emerald-600">
+              <span className="text-xs font-medium text-success-600">
                 Saved ✓
               </span>
             ) : null}

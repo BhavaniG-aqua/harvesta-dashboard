@@ -2,10 +2,11 @@
 const VARIANT_STYLES = {
   primary:
     "bg-gradient-to-br from-brand-600 to-brand-700 text-white shadow-sm shadow-brand-600/20 hover:from-brand-700 hover:to-brand-800",
-  secondary: "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50",
-  ghost: "bg-transparent text-slate-600 hover:bg-slate-100",
-  danger: "bg-accent-100 text-accent-600 hover:bg-accent-100/80",
-  success: "bg-success-100 text-success-600 hover:bg-success-100/80",
+  secondary:
+    "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-700",
+  ghost: "bg-transparent text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800",
+  danger: "bg-accent-100 text-accent-600 hover:bg-accent-100/80 dark:bg-accent-600/20 dark:text-accent-400 dark:hover:bg-accent-600/30",
+  success: "bg-success-100 text-success-600 hover:bg-success-100/80 dark:bg-success-600/20 dark:text-success-500 dark:hover:bg-success-600/30",
 };
 
 function Button({

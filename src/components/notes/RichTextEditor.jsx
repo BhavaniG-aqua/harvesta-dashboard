@@ -24,7 +24,7 @@ function RichTextEditor({ editorRef, initialHtml, onChange, placeholder }) {
       suppressContentEditableWarning
       onInput={() => onChange?.(editorRef.current.innerHTML)}
       data-placeholder={placeholder}
-      className="note-editor min-h-[280px] w-full rounded-2xl border border-slate-200 bg-white p-4 text-sm leading-relaxed text-slate-700 outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+      className="note-editor min-h-[280px] w-full rounded-2xl border border-slate-200 bg-white p-4 text-sm leading-relaxed text-slate-700 outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
     />
   );
 }

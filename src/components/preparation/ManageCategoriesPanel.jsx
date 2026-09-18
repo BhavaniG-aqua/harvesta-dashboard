@@ -23,8 +23,8 @@ function ManageCategoriesPanel({ categories, onRename, onDelete }) {
   if (categories.length === 0) return null;
 
   return (
-    <Card className="flex flex-col gap-2 bg-white">
-      <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+    <Card className="flex flex-col gap-2 bg-white dark:bg-slate-800">
+      <p className="text-xs font-medium uppercase tracking-wide text-slate-400 dark:text-slate-500">
         Manage Categories
       </p>
       {categories.map((cat) => (
@@ -39,13 +39,13 @@ function ManageCategoriesPanel({ categories, onRename, onDelete }) {
                 if (e.key === "Enter") commit(cat);
                 if (e.key === "Escape") setEditingId(null);
               }}
-              className="w-full rounded-lg border border-brand-300 px-2 py-1 text-sm outline-none"
+              className="w-full rounded-lg border border-brand-300 bg-white px-2 py-1 text-sm text-slate-900 outline-none dark:bg-slate-900 dark:text-slate-100"
             />
           ) : (
             <button
               type="button"
               onClick={() => startEdit(cat)}
-              className="text-left text-sm text-slate-700 hover:text-brand-600"
+              className="text-left text-sm text-slate-700 hover:text-brand-600 dark:text-slate-200 dark:hover:text-brand-400"
             >
               {cat.name}
             </button>

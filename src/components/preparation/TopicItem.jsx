@@ -21,7 +21,7 @@ function TopicItem({ topic, onStatusChange, onDelete, onRename }) {
   }
 
   return (
-    <Card className="flex flex-col gap-3 bg-white">
+    <Card className="flex flex-col gap-3 bg-white dark:bg-slate-800">
       <div className="flex items-start justify-between gap-2">
         {editing ? (
           <input
@@ -36,13 +36,13 @@ function TopicItem({ topic, onStatusChange, onDelete, onRename }) {
                 setEditing(false);
               }
             }}
-            className="w-full rounded-lg border border-brand-300 px-2 py-1 text-sm outline-none"
+            className="w-full rounded-lg border border-brand-300 bg-white px-2 py-1 text-sm text-slate-900 outline-none dark:bg-slate-900 dark:text-slate-100"
           />
         ) : (
           <button
             type="button"
             onClick={() => setEditing(true)}
-            className="text-left text-sm font-medium text-slate-800"
+            className="text-left text-sm font-medium text-slate-800 dark:text-slate-100"
           >
             {topic.name}
           </button>
@@ -62,7 +62,7 @@ function TopicItem({ topic, onStatusChange, onDelete, onRename }) {
                 "flex-1 rounded-lg py-1.5 text-xs font-medium transition-colors",
                 isActive
                   ? "bg-brand-600 text-white"
-                  : "bg-slate-100 text-slate-500 hover:bg-slate-200",
+                  : "bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600",
               ].join(" ")}
             >
               {status}
@@ -73,7 +73,7 @@ function TopicItem({ topic, onStatusChange, onDelete, onRename }) {
           <button
             type="button"
             onClick={() => onDelete(topic.id)}
-            className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-500 hover:bg-red-100"
+            className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-500 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
             aria-label="Delete topic"
           >
             🗑️

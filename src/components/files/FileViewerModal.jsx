@@ -48,13 +48,13 @@ function FileViewerModal({ file, onClose, onSaveText, onDelete }) {
       onClick={onClose}
     >
       <div
-        className="flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl md:max-w-2xl md:rounded-3xl"
+        className="flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl md:max-w-2xl md:rounded-3xl dark:bg-slate-800"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
+        <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3 dark:border-slate-700">
           <div className="flex items-center gap-2 overflow-hidden">
             <span className="text-xl">{getFileIcon(file.name)}</span>
-            <p className="truncate text-sm font-semibold text-slate-800">
+            <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">
               {file.name}
             </p>
           </div>
@@ -62,7 +62,7 @@ function FileViewerModal({ file, onClose, onSaveText, onDelete }) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 dark:text-slate-500 dark:hover:bg-slate-700"
           >
             ✕
           </button>
@@ -75,14 +75,14 @@ function FileViewerModal({ file, onClose, onSaveText, onDelete }) {
               value={draftText}
               onChange={(e) => setDraftText(e.target.value)}
               rows={16}
-              className="w-full resize-none rounded-xl border border-slate-200 p-3 font-mono text-xs text-slate-700 outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+              className="w-full resize-none rounded-xl border border-slate-200 bg-white p-3 font-mono text-xs text-slate-700 outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
             />
           ) : (
             <FileViewerBody file={file} />
           )}
         </div>
 
-        <div className="flex flex-wrap items-center justify-end gap-2 border-t border-slate-100 px-4 py-3">
+        <div className="flex flex-wrap items-center justify-end gap-2 border-t border-slate-100 px-4 py-3 dark:border-slate-700">
           {editing ? (
             <>
               <Button variant="secondary" onClick={() => setEditing(false)}>

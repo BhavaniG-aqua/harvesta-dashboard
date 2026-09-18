@@ -45,7 +45,7 @@ function AddInspirationForm({ onSubmit }) {
   }
 
   return (
-    <Card className="bg-white">
+    <Card className="bg-white dark:bg-slate-800">
       <div className="mb-3 flex flex-wrap gap-2">
         <Button
           variant={type === "motivation" ? "primary" : "secondary"}

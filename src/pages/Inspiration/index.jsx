@@ -24,7 +24,7 @@ function InspirationPage() {
         subtitle="Just for motivation and entertainment — no performance tracking here"
       />
 
-      <div className="mb-4 flex gap-2 border-b border-slate-200">
+      <div className="mb-4 flex gap-2 border-b border-slate-200 dark:border-slate-700">
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -33,8 +33,8 @@ function InspirationPage() {
             className={[
               "border-b-2 -mb-px px-1 pb-2.5 text-sm font-medium transition-colors",
               tab === t.id
-                ? "border-brand-600 text-brand-700"
-                : "border-transparent text-slate-400 hover:text-slate-600",
+                ? "border-brand-600 text-brand-700 dark:border-brand-400 dark:text-brand-400"
+                : "border-transparent text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300",
             ].join(" ")}
           >
             {t.label}

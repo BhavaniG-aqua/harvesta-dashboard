@@ -74,14 +74,14 @@ function NoteToolbar({ editorRef }) {
   }
 
   return (
-    <div className="no-scrollbar flex items-center gap-2 overflow-x-auto rounded-2xl border border-slate-200 bg-white p-2">
+    <div className="no-scrollbar flex items-center gap-2 overflow-x-auto rounded-2xl border border-slate-200 bg-white p-2 dark:border-slate-700 dark:bg-slate-800">
       <button
         type="button"
         onMouseDown={(e) => {
           e.preventDefault();
           exec("bold");
         }}
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-100"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700"
         aria-label="Bold"
         title="Bold"
       >
@@ -93,14 +93,14 @@ function NoteToolbar({ editorRef }) {
           e.preventDefault();
           exec("italic");
         }}
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm italic text-slate-700 hover:bg-slate-100"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm italic text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700"
         aria-label="Italic"
         title="Italic"
       >
         I
       </button>
 
-      <div className="h-6 w-px shrink-0 bg-slate-200" aria-hidden="true" />
+      <div className="h-6 w-px shrink-0 bg-slate-200 dark:bg-slate-700" aria-hidden="true" />
 
       <select
         onChange={(e) => {
@@ -109,7 +109,7 @@ function NoteToolbar({ editorRef }) {
         }}
         defaultValue=""
         aria-label="Font size"
-        className="shrink-0 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-600 outline-none focus:border-brand-400"
+        className="shrink-0 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-600 outline-none focus:border-brand-400 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200"
       >
         <option value="" disabled>
           Size
@@ -121,7 +121,7 @@ function NoteToolbar({ editorRef }) {
         ))}
       </select>
 
-      <div className="h-6 w-px shrink-0 bg-slate-200" aria-hidden="true" />
+      <div className="h-6 w-px shrink-0 bg-slate-200 dark:bg-slate-700" aria-hidden="true" />
 
       <div className="flex shrink-0 items-center gap-1.5">
         {COLOR_PRESETS.map((color) => (
@@ -132,14 +132,14 @@ function NoteToolbar({ editorRef }) {
               e.preventDefault();
               exec("foreColor", color);
             }}
-            className="h-6 w-6 shrink-0 rounded-full ring-1 ring-slate-200 transition-transform hover:scale-110"
+            className="h-6 w-6 shrink-0 rounded-full ring-1 ring-slate-200 transition-transform hover:scale-110 dark:ring-slate-600"
             style={{ backgroundColor: color }}
             aria-label={`Text color ${color}`}
             title="Text color"
           />
         ))}
         <label
-          className="flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-full text-xs ring-1 ring-slate-200 hover:bg-slate-50"
+          className="flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center rounded-full text-xs ring-1 ring-slate-200 hover:bg-slate-50 dark:ring-slate-600 dark:hover:bg-slate-700"
           title="Custom color"
         >
           🎨

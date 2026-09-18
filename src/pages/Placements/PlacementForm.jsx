@@ -52,7 +52,7 @@ function PlacementFormPage() {
         label="Back"
       />
 
-      <h1 className="mb-4 text-xl font-semibold text-slate-900">
+      <h1 className="mb-4 text-xl font-semibold text-slate-900 dark:text-slate-100">
         {isEditing ? "Edit Placement Event" : "Add Placement Event"}
       </h1>
 

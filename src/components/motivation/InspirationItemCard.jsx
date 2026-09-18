@@ -6,7 +6,7 @@ import ConfirmButton from "../common/ConfirmButton";
 function InspirationItemCard({ item, onDelete }) {
   if (item.type === "image") {
     return (
-      <Card className="overflow-hidden" padded={false}>
+      <Card className="overflow-hidden bg-white dark:bg-slate-800" padded={false}>
         <div className="relative">
           <img
             src={item.imageUrl}
@@ -21,7 +21,7 @@ function InspirationItemCard({ item, onDelete }) {
           />
         </div>
         {item.caption ? (
-          <p className="p-3 text-sm text-slate-600">{item.caption}</p>
+          <p className="p-3 text-sm text-slate-600 dark:text-slate-300">{item.caption}</p>
         ) : null}
       </Card>
     );
@@ -30,16 +30,22 @@ function InspirationItemCard({ item, onDelete }) {
   const isFunny = item.type === "funny";
 
   return (
-    <Card className={isFunny ? "bg-amber-50" : "bg-brand-50"}>
+    <Card
+      className={
+        isFunny
+          ? "bg-amber-50 dark:bg-slate-800"
+          : "bg-brand-50 dark:bg-slate-800"
+      }
+    >
       <div className="flex items-start justify-between gap-3">
         <div>
           {isFunny ? (
-            <p className="text-sm text-slate-700">{item.text}</p>
+            <p className="text-sm text-slate-700 dark:text-slate-200">{item.text}</p>
           ) : (
             <>
-              <p className="text-sm italic text-slate-700">“{item.quote}”</p>
+              <p className="text-sm italic text-slate-700 dark:text-slate-200">“{item.quote}”</p>
               {item.author ? (
-                <p className="mt-1 text-xs text-slate-400">— {item.author}</p>
+                <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">— {item.author}</p>
               ) : null}
             </>
           )}

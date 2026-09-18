@@ -8,8 +8,8 @@ function CategoryTabs({ categories, activeId, onChange }) {
         className={[
           "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors",
           activeId === null
-            ? "bg-slate-800 text-white"
-            : "bg-slate-100 text-slate-600 hover:bg-slate-200",
+            ? "bg-slate-800 text-white dark:bg-slate-600"
+            : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700",
         ].join(" ")}
       >
         All Categories
@@ -22,8 +22,8 @@ function CategoryTabs({ categories, activeId, onChange }) {
           className={[
             "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors",
             activeId === cat.id
-              ? "bg-slate-800 text-white"
-              : "bg-slate-100 text-slate-600 hover:bg-slate-200",
+              ? "bg-slate-800 text-white dark:bg-slate-600"
+              : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700",
           ].join(" ")}
         >
           {cat.name}

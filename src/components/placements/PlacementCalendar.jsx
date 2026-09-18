@@ -39,9 +39,9 @@ function PlacementCalendar({ eventsByDate, selectedDateKey, onSelectDate }) {
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
       <div className="mb-3 flex items-center justify-between">
-        <p className="text-base font-semibold text-slate-900">
+        <p className="text-base font-semibold text-slate-900 dark:text-slate-100">
           {MONTH_NAMES[viewMonth]} {viewYear}
         </p>
         <div className="flex gap-1">
@@ -49,7 +49,7 @@ function PlacementCalendar({ eventsByDate, selectedDateKey, onSelectDate }) {
             type="button"
             onClick={goToPrevMonth}
             aria-label="Previous month"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
           >
             ‹
           </button>
@@ -57,7 +57,7 @@ function PlacementCalendar({ eventsByDate, selectedDateKey, onSelectDate }) {
             type="button"
             onClick={goToNextMonth}
             aria-label="Next month"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700"
           >
             ›
           </button>
@@ -66,7 +66,7 @@ function PlacementCalendar({ eventsByDate, selectedDateKey, onSelectDate }) {
 
       <div className="grid grid-cols-7 gap-y-1 text-center">
         {WEEKDAY_LABELS.map((label) => (
-          <div key={label} className="text-xs font-medium text-slate-400">
+          <div key={label} className="text-xs font-medium text-slate-400 dark:text-slate-500">
             {label}
           </div>
         ))}
@@ -85,12 +85,12 @@ function PlacementCalendar({ eventsByDate, selectedDateKey, onSelectDate }) {
               onClick={() => onSelectDate(key)}
               className={[
                 "relative mx-auto flex h-9 w-9 flex-col items-center justify-center rounded-full text-sm transition-colors",
-                !inCurrentMonth ? "text-slate-300" : "text-slate-700",
+                !inCurrentMonth ? "text-slate-300 dark:text-slate-600" : "text-slate-700 dark:text-slate-200",
                 isSelected
                   ? "bg-brand-600 text-white"
                   : isToday
-                  ? "border border-brand-400 text-brand-600"
-                  : "hover:bg-slate-100",
+                  ? "border border-brand-400 text-brand-600 dark:text-brand-400"
+                  : "hover:bg-slate-100 dark:hover:bg-slate-700",
               ].join(" ")}
             >
               {date.getDate()}

@@ -188,7 +188,7 @@ function NoteEditorPage() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Note title"
-          className="w-full border-b border-slate-200 pb-2 text-lg font-semibold text-slate-900 outline-none focus:border-brand-400"
+          className="w-full border-b border-slate-200 pb-2 text-lg font-semibold text-slate-900 outline-none focus:border-brand-400 dark:border-slate-700 dark:text-slate-100"
         />
       </div>
 
@@ -204,7 +204,7 @@ function NoteEditorPage() {
 
       {attachments.length > 0 ? (
         <div className="mt-3 flex flex-col gap-2">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+          <p className="text-xs font-medium uppercase tracking-wide text-slate-400 dark:text-slate-500">
             Attached Files
           </p>
           {attachments.map((file) => (

@@ -29,10 +29,10 @@ function PlacementDetailPage() {
         <>
           <div className="mb-4 flex items-start justify-between gap-3">
             <div>
-              <h1 className="text-xl font-semibold text-slate-900">
+              <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
                 {event.company}
               </h1>
-              <p className="text-sm text-slate-500">{event.role}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{event.role}</p>
             </div>
             <div className="flex shrink-0 gap-2">
               <Button
@@ -44,7 +44,7 @@ function PlacementDetailPage() {
             </div>
           </div>
 
-          <Card padded={false} className="bg-white">
+          <Card padded={false} className="bg-white dark:bg-slate-800">
             <div className="px-4">
               <DetailRow label="Date" value={formatShortDate(event.date)} />
               <DetailRow label="Time" value={event.time} />

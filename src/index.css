@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Enable class-based dark mode (Tailwind v4 default is prefers-color-scheme
+   media query; this makes `dark:` variants respond to a `.dark` class on
+   <html> instead, so the toggle button in Settings can control it). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Primary brand — teal, clean and professional */
   --color-brand-50: #f0fdfa;
@@ -40,6 +45,11 @@ body {
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
   background: linear-gradient(180deg, #f0fdfa 0%, #f7fafc 220px, #f7fafc 100%);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dark body {
+  background: #0f1115;
 }
 
 /* Hide scrollbar but keep scroll for horizontal chip rows etc. */
@@ -75,6 +85,9 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px -6px rgba(13, 148, 136, 0.2);
 }
+.dark .card-interactive:hover {
+  box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.5);
+}
 
 /* Basic prose styling for the docx->HTML preview (mammoth output) since
    the Tailwind typography plugin isn't installed. */
@@ -91,4 +104,7 @@ body {
 }
 .doc-preview img {
   max-width: 100%;
+}
+.dark .doc-preview h1, .dark .doc-preview h2, .dark .doc-preview h3 {
+  color: #e2e8f0;
 }

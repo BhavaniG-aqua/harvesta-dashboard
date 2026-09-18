@@ -90,20 +90,20 @@ function InterviewFolderDetailPage() {
                 setEditingTitle(false);
               }
             }}
-            className="rounded-lg border border-brand-300 px-2 py-1 text-lg font-semibold outline-none"
+            className="rounded-lg border border-brand-300 bg-white px-2 py-1 text-lg font-semibold text-slate-900 outline-none dark:bg-slate-800 dark:text-slate-100"
           />
         ) : (
           <h1
-            className="text-lg font-semibold text-slate-900"
+            className="text-lg font-semibold text-slate-900 dark:text-slate-100"
             onClick={() => setEditingTitle(true)}
           >
-            {folder.name} <span className="text-xs text-slate-400">✏️</span>
+            {folder.name} <span className="text-xs text-slate-400 dark:text-slate-500">✏️</span>
           </h1>
         )}
         <button
           type="button"
           onClick={handleDeleteFolder}
-          className="text-xs font-medium text-red-500 hover:underline"
+          className="text-xs font-medium text-red-500 hover:underline dark:text-red-400"
         >
           Delete folder
         </button>

@@ -19,7 +19,7 @@ function FolderCard({ folder, onDelete, onRename }) {
 
   if (editing) {
     return (
-      <div className="flex flex-col items-center gap-1.5 rounded-2xl border border-brand-300 bg-white p-4 text-center">
+      <div className="flex flex-col items-center gap-1.5 rounded-2xl border border-brand-300 bg-white p-4 text-center dark:border-brand-600 dark:bg-slate-800">
         <span className="text-3xl">📁</span>
         <input
           autoFocus
@@ -33,7 +33,7 @@ function FolderCard({ folder, onDelete, onRename }) {
               setEditing(false);
             }
           }}
-          className="w-full rounded-lg border border-slate-200 px-1 py-0.5 text-center text-xs outline-none"
+          className="w-full rounded-lg border border-slate-200 bg-white px-1 py-0.5 text-center text-xs text-slate-900 outline-none dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
         />
       </div>
     );
@@ -43,10 +43,10 @@ function FolderCard({ folder, onDelete, onRename }) {
     <div className="group relative">
       <Link
         to={`/preparation/files/${folder.id}`}
-        className="flex flex-col items-center gap-1.5 rounded-2xl border border-slate-200 bg-white p-4 text-center transition-shadow hover:shadow-md"
+        className="flex flex-col items-center gap-1.5 rounded-2xl border border-slate-200 bg-white p-4 text-center transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
       >
         <span className="text-3xl">📁</span>
-        <span className="w-full truncate text-xs font-medium text-slate-700">
+        <span className="w-full truncate text-xs font-medium text-slate-700 dark:text-slate-200">
           {folder.name}
         </span>
       </Link>
@@ -55,7 +55,7 @@ function FolderCard({ folder, onDelete, onRename }) {
           <button
             type="button"
             onClick={() => setEditing(true)}
-            className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs text-slate-500 shadow ring-1 ring-slate-200"
+            className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs text-slate-500 shadow ring-1 ring-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:ring-slate-600"
             aria-label="Rename folder"
           >
             ✏️
@@ -65,7 +65,7 @@ function FolderCard({ folder, onDelete, onRename }) {
           <button
             type="button"
             onClick={() => onDelete(folder.id)}
-            className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs text-red-500 shadow ring-1 ring-slate-200"
+            className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs text-red-500 shadow ring-1 ring-slate-200 dark:bg-slate-700 dark:ring-slate-600"
             aria-label="Delete folder"
           >
             ✕

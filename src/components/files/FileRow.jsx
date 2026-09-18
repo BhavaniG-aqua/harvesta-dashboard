@@ -30,19 +30,19 @@ function FileRow({ file, onDelete, onSaveText }) {
           if (canOpen && (e.key === "Enter" || e.key === " ")) setViewerOpen(true);
         }}
         className={[
-          "flex w-full items-center justify-between rounded-2xl border border-slate-200/70 bg-white p-3 text-left shadow-sm shadow-slate-200/40 transition-all",
+          "flex w-full items-center justify-between rounded-2xl border border-slate-200/70 bg-white p-3 text-left shadow-sm shadow-slate-200/40 transition-all dark:border-slate-700/70 dark:bg-slate-800",
           canOpen
-            ? "cursor-pointer hover:border-brand-200 hover:shadow-md"
+            ? "cursor-pointer hover:border-brand-200 hover:shadow-md dark:hover:border-brand-700"
             : "cursor-not-allowed opacity-60",
         ].join(" ")}
       >
         <div className="flex items-center gap-3 overflow-hidden">
           <span className="text-2xl">{icon}</span>
           <div className="overflow-hidden">
-            <p className="truncate text-sm font-medium text-slate-800">
+            <p className="truncate text-sm font-medium text-slate-800 dark:text-slate-100">
               {file.name}
             </p>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-400 dark:text-slate-500">
               {file.size} • {file.createdAt}
             </p>
           </div>
@@ -54,7 +54,7 @@ function FileRow({ file, onDelete, onSaveText }) {
             disabled={!canOpen}
             className={[
               "rounded-lg px-2 py-1.5 text-sm",
-              canOpen ? "text-slate-500 hover:bg-slate-100" : "cursor-not-allowed text-slate-300",
+              canOpen ? "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700" : "cursor-not-allowed text-slate-300 dark:text-slate-600",
             ].join(" ")}
             title={canOpen ? "Download" : "No file content stored (mock entry)"}
             aria-label="Download file"

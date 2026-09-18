@@ -1,8 +1,8 @@
 // Status pill used for Preparation Topics (NEW / COMPLETED / REVISE).
 const STATUS_STYLES = {
-  NEW: "bg-slate-100 text-slate-600",
-  COMPLETED: "bg-emerald-100 text-emerald-700",
-  REVISE: "bg-amber-100 text-amber-700",
+  NEW: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300",
+  COMPLETED: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
+  REVISE: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
 };
 
 function StatusPill({ status, className = "" }) {

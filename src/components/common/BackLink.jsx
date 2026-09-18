@@ -5,7 +5,7 @@ function BackLink({ to, label = "Back" }) {
   return (
     <Link
       to={to}
-      className="mb-3 inline-flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-slate-700"
+      className="mb-3 inline-flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
     >
       <span aria-hidden="true">←</span>
       {label}

@@ -23,11 +23,11 @@ function ConfirmButton({
   return (
     <span
       className={[
-        "inline-flex items-center gap-2 rounded-xl bg-white/90 px-2 py-1 shadow-sm backdrop-blur-sm",
+        "inline-flex items-center gap-2 rounded-xl bg-white/90 px-2 py-1 shadow-sm backdrop-blur-sm dark:bg-slate-800/90",
         className,
       ].join(" ")}
     >
-      <span className="text-xs text-slate-500">{confirmLabel}</span>
+      <span className="text-xs text-slate-500 dark:text-slate-400">{confirmLabel}</span>
       <Button
         variant="danger"
         onClick={() => {

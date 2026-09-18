@@ -7,7 +7,7 @@ import EmptyState from "../common/EmptyState";
 function SelectedDayEvents({ dateLabel, events }) {
   return (
     <div>
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
         {dateLabel}
       </p>
 
@@ -17,18 +17,18 @@ function SelectedDayEvents({ dateLabel, events }) {
         <div className="flex flex-col gap-2">
           {events.map((event) => (
             <Link key={event.id} to={`/placements/${event.id}`}>
-              <Card className="flex items-center justify-between bg-white">
+              <Card className="flex items-center justify-between bg-white dark:bg-slate-800">
                 <div className="flex items-center gap-3">
                   <span className="h-2 w-2 shrink-0 rounded-full bg-brand-500" />
                   <div>
-                    <p className="text-sm font-semibold text-slate-800">
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                       {event.company}
                     </p>
-                    <p className="text-xs text-slate-500">{event.role}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{event.role}</p>
                   </div>
                 </div>
                 {event.time ? (
-                  <p className="shrink-0 text-sm font-medium text-slate-600">
+                  <p className="shrink-0 text-sm font-medium text-slate-600 dark:text-slate-300">
                     {event.time}
                   </p>
                 ) : null}

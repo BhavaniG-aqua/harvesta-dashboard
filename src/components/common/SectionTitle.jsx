@@ -4,7 +4,7 @@ function SectionTitle({ children, className = "" }) {
   return (
     <h2
       className={[
-        "mb-2 text-sm font-semibold uppercase tracking-wide text-slate-400",
+        "mb-2 text-sm font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500",
         className,
       ].join(" ")}
     >

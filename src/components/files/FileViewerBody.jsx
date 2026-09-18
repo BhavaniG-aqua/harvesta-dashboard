@@ -88,7 +88,7 @@ function SheetTable({ sheets }) {
   return (
     <div>
       {sheets.length > 1 ? (
-        <div className="no-scrollbar mb-2 flex gap-1 overflow-x-auto border-b border-slate-200 pb-2">
+        <div className="no-scrollbar mb-2 flex gap-1 overflow-x-auto border-b border-slate-200 pb-2 dark:border-slate-700">
           {sheets.map((s, i) => (
             <button
               key={s.name}
@@ -97,8 +97,8 @@ function SheetTable({ sheets }) {
               className={[
                 "shrink-0 rounded-lg px-3 py-1 text-xs font-medium",
                 i === activeSheet
-                  ? "bg-brand-100 text-brand-700"
-                  : "text-slate-500 hover:bg-slate-100",
+                  ? "bg-brand-100 text-brand-700 dark:bg-brand-800/40 dark:text-brand-300"
+                  : "text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700",
               ].join(" ")}
             >
               {s.name}
@@ -106,16 +106,16 @@ function SheetTable({ sheets }) {
           ))}
         </div>
       ) : null}
-      <div className="overflow-auto rounded-xl border border-slate-200">
+      <div className="overflow-auto rounded-xl border border-slate-200 dark:border-slate-700">
         <table className="min-w-full text-left text-xs">
           <tbody>
             {sheet.rows.map((row, i) => (
               <tr
                 key={i}
-                className={i === 0 ? "bg-slate-50 font-semibold" : "odd:bg-white even:bg-slate-50/40"}
+                className={i === 0 ? "bg-slate-50 font-semibold dark:bg-slate-700" : "odd:bg-white even:bg-slate-50/40 dark:odd:bg-slate-800 dark:even:bg-slate-800/60"}
               >
                 {row.map((cell, j) => (
-                  <td key={j} className="whitespace-nowrap border-b border-slate-100 px-3 py-1.5 text-slate-700">
+                  <td key={j} className="whitespace-nowrap border-b border-slate-100 px-3 py-1.5 text-slate-700 dark:border-slate-700 dark:text-slate-200">
                     {String(cell)}
                   </td>
                 ))}
@@ -134,7 +134,7 @@ function FileViewerBody({ file }) {
 
   if (loading) {
     return (
-      <div className="flex h-40 items-center justify-center text-sm text-slate-400">
+      <div className="flex h-40 items-center justify-center text-sm text-slate-400 dark:text-slate-500">
         Loading preview…
       </div>
     );
@@ -142,7 +142,7 @@ function FileViewerBody({ file }) {
 
   if (error) {
     return (
-      <div className="flex h-40 flex-col items-center justify-center gap-1 text-center text-sm text-slate-400">
+      <div className="flex h-40 flex-col items-center justify-center gap-1 text-center text-sm text-slate-400 dark:text-slate-500">
         <span className="text-2xl">⚠️</span>
         {error}
       </div>
@@ -164,14 +164,14 @@ function FileViewerBody({ file }) {
       <iframe
         title={file.name}
         src={data}
-        className="h-[70vh] w-full rounded-xl border border-slate-200"
+        className="h-[70vh] w-full rounded-xl border border-slate-200 dark:border-slate-700"
       />
     );
   }
 
   if (category === "text") {
     return (
-      <pre className="max-h-[70vh] overflow-auto whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-xs text-slate-700">
+      <pre className="max-h-[70vh] overflow-auto whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-xs text-slate-700 dark:bg-slate-900 dark:text-slate-200">
         {data}
       </pre>
     );
@@ -180,7 +180,7 @@ function FileViewerBody({ file }) {
   if (category === "word") {
     return (
       <div
-        className="doc-preview max-h-[70vh] max-w-none overflow-auto rounded-xl border border-slate-200 p-4 text-sm text-slate-700"
+        className="doc-preview max-h-[70vh] max-w-none overflow-auto rounded-xl border border-slate-200 p-4 text-sm text-slate-700 dark:border-slate-700 dark:text-slate-200"
         dangerouslySetInnerHTML={{ __html: data }}
       />
     );
@@ -197,10 +197,10 @@ function FileViewerBody({ file }) {
   // "unsupported" — e.g. PowerPoint. No good lightweight in-browser
   // renderer exists; offer a clear explanation + download instead.
   return (
-    <div className="flex h-40 flex-col items-center justify-center gap-2 text-center text-sm text-slate-500">
+    <div className="flex h-40 flex-col items-center justify-center gap-2 text-center text-sm text-slate-500 dark:text-slate-400">
       <span className="text-3xl">📁</span>
       <p>Preview isn't available for this file type yet.</p>
-      <p className="text-xs text-slate-400">Download it to open in its own app.</p>
+      <p className="text-xs text-slate-400 dark:text-slate-500">Download it to open in its own app.</p>
     </div>
   );
 }
