@@ -9,7 +9,7 @@ function NoteCard({ note }) {
 
   return (
     <Link to={`/notes/${note.id}`}>
-      <Card interactive>
+      <Card interactive className="bg-white">
         <p className="text-sm font-semibold text-slate-900">
           {note.title || "Untitled note"}
         </p>

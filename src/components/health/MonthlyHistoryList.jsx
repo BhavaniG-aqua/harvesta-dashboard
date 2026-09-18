@@ -18,7 +18,7 @@ function MonthlyHistoryList({ logs }) {
   return (
     <div className="flex flex-col gap-2">
       {logs.map((log) => (
-        <Card key={log.id} className="flex items-center justify-between">
+        <Card key={log.id} className="flex items-center justify-between bg-white">
           <p className="text-sm font-medium text-slate-700">
             {formatShortDate(log.date)}
           </p>

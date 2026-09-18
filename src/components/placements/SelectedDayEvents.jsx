@@ -17,7 +17,7 @@ function SelectedDayEvents({ dateLabel, events }) {
         <div className="flex flex-col gap-2">
           {events.map((event) => (
             <Link key={event.id} to={`/placements/${event.id}`}>
-              <Card className="flex items-center justify-between">
+              <Card className="flex items-center justify-between bg-white">
                 <div className="flex items-center gap-3">
                   <span className="h-2 w-2 shrink-0 rounded-full bg-brand-500" />
                   <div>

@@ -5,7 +5,7 @@ import Card from "../common/Card";
 function HealthSummaryCard({ log }) {
   if (!log) {
     return (
-      <Card>
+      <Card className="bg-white">
         <p className="text-sm text-slate-500">
           No health entry for today yet. Add one from the Health page.
         </p>
@@ -14,7 +14,7 @@ function HealthSummaryCard({ log }) {
   }
 
   return (
-    <Card>
+    <Card className="bg-white">
       <div className="grid grid-cols-4 gap-2 text-center">
         <div>
           <p className="text-xl">🍎</p>

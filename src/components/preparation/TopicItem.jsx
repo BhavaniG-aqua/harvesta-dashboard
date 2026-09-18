@@ -21,7 +21,7 @@ function TopicItem({ topic, onStatusChange, onDelete, onRename }) {
   }
 
   return (
-    <Card className="flex flex-col gap-3">
+    <Card className="flex flex-col gap-3 bg-white">
       <div className="flex items-start justify-between gap-2">
         {editing ? (
           <input

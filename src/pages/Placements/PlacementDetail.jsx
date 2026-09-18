@@ -44,7 +44,7 @@ function PlacementDetailPage() {
             </div>
           </div>
 
-          <Card padded={false}>
+          <Card padded={false} className="bg-white">
             <div className="px-4">
               <DetailRow label="Date" value={formatShortDate(event.date)} />
               <DetailRow label="Time" value={event.time} />

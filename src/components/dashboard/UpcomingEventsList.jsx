@@ -20,7 +20,7 @@ function UpcomingEventsList({ events }) {
       {events.map((event) => {
         const daysAway = daysFromToday(event.date);
         return (
-          <Card key={event.id} className="flex items-center justify-between">
+          <Card key={event.id} className="flex items-center justify-between bg-white">
             <div>
               <p className="text-sm font-semibold text-slate-800">
                 {event.company}

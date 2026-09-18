@@ -23,7 +23,7 @@ function ManageCategoriesPanel({ categories, onRename, onDelete }) {
   if (categories.length === 0) return null;
 
   return (
-    <Card className="flex flex-col gap-2">
+    <Card className="flex flex-col gap-2 bg-white">
       <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
         Manage Categories
       </p>

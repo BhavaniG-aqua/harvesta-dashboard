@@ -20,7 +20,7 @@ function SettingsPage() {
     <div className="flex flex-col gap-4">
       <PageHeader title="Settings" subtitle="Lightweight preferences" />
 
-      <Card>
+      <Card className="bg-white">
         <label className="block">
           <span className="text-xs font-medium text-slate-500">
             Friend&apos;s Name

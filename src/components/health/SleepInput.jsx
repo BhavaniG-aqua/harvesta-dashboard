@@ -3,7 +3,7 @@ import Card from "../common/Card";
 // Simple numeric sleep hours input.
 function SleepInput({ value, onChange }) {
   return (
-    <Card>
+    <Card className="bg-white">
       <label className="flex items-center justify-between gap-3">
         <span className="text-xs font-medium text-slate-500">😴 Sleep (hours)</span>
         <input

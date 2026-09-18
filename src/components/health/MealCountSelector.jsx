@@ -3,7 +3,7 @@ import Card from "../common/Card";
 // Meal count selector: choose exactly one of 1 / 2 / 3.
 function MealCountSelector({ value, onChange }) {
   return (
-    <Card>
+    <Card className="bg-white">
       <p className="mb-2 text-xs font-medium text-slate-500">🍽️ Meals today</p>
       <div className="flex gap-2">
         {[1, 2, 3].map((count) => {
