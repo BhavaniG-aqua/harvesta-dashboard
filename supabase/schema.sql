@@ -60,17 +60,24 @@ create table interview_files (
 );
 
 -- ---------------------------------------------------------------------------
--- Notes — general notepad with BOTH inline images and file attachments.
--- Both content types are attached to the SAME note_attachments table and
--- the SAME "note-attachments" Storage bucket; only `type` differs
--- ('image' is rendered inline, everything else as a downloadable row).
--- Storage bucket: "note-attachments"
+-- Notes — Word-style notepad.
+-- `notes.content` stores rich HTML: images inserted by the user are
+-- embedded INLINE at the cursor position directly inside this HTML
+-- (as <img src="..."> tags pointing at Supabase Storage URLs), exactly
+-- like inserting a picture inside a Word document. They are NOT tracked
+-- as separate rows.
+-- `note_attachments` is only for separate, non-inline files (PDFs, docs,
+-- etc.) that are shown as a downloadable list below the note body —
+-- these don't make sense embedded inline in running text.
+-- Storage bucket: "note-attachments" (used for BOTH inline image uploads
+-- and file attachments; inline images are referenced directly from the
+-- `content` HTML, attachments are tracked via note_attachments rows).
 -- Object path convention: {note_id}/{filename}
 -- ---------------------------------------------------------------------------
 create table notes (
   id uuid primary key default gen_random_uuid(),
   title text,
-  content text,
+  content text,        -- rich HTML; inline <img> tags reference Storage URLs
   updated_at timestamptz default now(),
   created_at timestamptz default now()
 );
@@ -79,7 +86,7 @@ create table note_attachments (
   id uuid primary key default gen_random_uuid(),
   note_id uuid references notes(id) on delete cascade,
   name text not null,
-  type text not null,       -- 'image' | 'pdf' | 'doc' | ...
+  type text not null,       -- 'pdf' | 'doc' | ...
   size text,
   storage_path text not null, -- path inside the "note-attachments" bucket
   created_at timestamptz default now()

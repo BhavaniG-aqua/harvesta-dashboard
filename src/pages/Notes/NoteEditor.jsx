@@ -4,32 +4,31 @@ import BackLink from "../../components/common/BackLink";
 import Button from "../../components/common/Button";
 import EmptyState from "../../components/common/EmptyState";
 import FileRow from "../../components/files/FileRow";
+import RichTextEditor from "../../components/notes/RichTextEditor";
 import { useNotesContext } from "../../services/NotesContext";
+import { stripHtml } from "../../utils/html";
 
-function detectAttachmentType(file) {
-  const ext = file.name.split(".").pop()?.toLowerCase();
-  if (["png", "jpg", "jpeg", "gif", "webp"].includes(ext)) return "image";
-  if (ext === "pdf") return "pdf";
-  return "doc";
-}
-
-// Simple notepad-style editor for a single note.
-// Supports inline images (shown as a thumbnail grid) AND general file
-// attachments like PDFs/docs (shown as downloadable rows, same as the
-// Interview Prep file manager). Both share one `attachments` array —
-// only presentation differs based on `type`.
-// Attachment blob URLs are session-only for now; Phase 8 replaces them
-// with real Supabase Storage URLs (note_attachments table).
+// Word-style notepad editor for a single note.
+//
+// - Body text + images live TOGETHER inline in one contentEditable area
+//   (like inserting a picture inside a Word document at the cursor).
+// - Separate non-image files (PDFs, docs, etc.) are kept as a distinct
+//   "attachments" list below the body, shown as downloadable rows —
+//   these don't make sense embedded inline in running text.
+//
+// Image blob URLs embedded in the HTML, and attachment blob URLs, are
+// session-only for now; Phase 8 replaces both with real Supabase Storage
+// URLs (note_attachments table / "note-attachments" bucket).
 function NoteEditorPage() {
   const { noteId } = useParams();
   const navigate = useNavigate();
   const { getNote, updateNote, deleteNote } = useNotesContext();
+  const editorRef = useRef(null);
   const imageInputRef = useRef(null);
   const fileInputRef = useRef(null);
 
   const note = getNote(noteId);
   const [title, setTitle] = useState(note?.title || "");
-  const [content, setContent] = useState(note?.content || "");
   const [attachments, setAttachments] = useState(note?.attachments || []);
 
   if (!note) {
@@ -41,11 +40,12 @@ function NoteEditorPage() {
     );
   }
 
-  const images = attachments.filter((a) => a.type === "image");
-  const files = attachments.filter((a) => a.type !== "image");
+  function currentHtml() {
+    return editorRef.current?.innerHTML ?? note.content ?? "";
+  }
 
   function handleSave() {
-    updateNote(noteId, { title, content, attachments });
+    updateNote(noteId, { title, content: currentHtml(), attachments });
   }
 
   function handleDelete() {
@@ -54,7 +54,8 @@ function NoteEditorPage() {
   }
 
   function handleDownloadNote() {
-    const blob = new Blob([`${title}\n\n${content}`], { type: "text/plain" });
+    const plainText = stripHtml(currentHtml());
+    const blob = new Blob([`${title}\n\n${plainText}`], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -63,31 +64,60 @@ function NoteEditorPage() {
     URL.revokeObjectURL(url);
   }
 
-  function addAttachment(file) {
-    const type = detectAttachmentType(file);
+  // Inserts the picked image directly at the current cursor position
+  // inside the editor, exactly like Word's "Insert > Picture".
+  function handleInsertImage(e) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file || !editorRef.current) return;
+
+    const url = URL.createObjectURL(file);
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = file.name;
+
+    editorRef.current.focus();
+    const selection = window.getSelection();
+    let range;
+    if (selection && selection.rangeCount > 0 && editorRef.current.contains(selection.anchorNode)) {
+      range = selection.getRangeAt(0);
+    } else {
+      // No active cursor inside the editor — append to the end.
+      range = document.createRange();
+      range.selectNodeContents(editorRef.current);
+      range.collapse(false);
+    }
+    range.deleteContents();
+    range.insertNode(img);
+    // Move cursor just after the inserted image.
+    range.setStartAfter(img);
+    range.setEndAfter(img);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+  }
+
+  function detectAttachmentType(file) {
+    const ext = file.name.split(".").pop()?.toLowerCase();
+    if (ext === "pdf") return "pdf";
+    return "doc";
+  }
+
+  function handleAttachFile(e) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
     setAttachments((prev) => [
       ...prev,
       {
         id: `att-${Date.now()}`,
         name: file.name,
-        type,
+        type: detectAttachmentType(file),
         size: `${Math.max(1, Math.round(file.size / 1024))} KB`,
         url: URL.createObjectURL(file),
         createdAt: new Date().toISOString().slice(0, 10),
       },
     ]);
-  }
-
-  function handleInsertImage(e) {
-    const file = e.target.files?.[0];
-    if (file) addAttachment(file);
-    e.target.value = "";
-  }
-
-  function handleAttachFile(e) {
-    const file = e.target.files?.[0];
-    if (file) addAttachment(file);
-    e.target.value = "";
   }
 
   function handleDeleteAttachment(id) {
@@ -107,39 +137,18 @@ function NoteEditorPage() {
         />
       </div>
 
-      <textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        placeholder="Start writing..."
-        rows={12}
-        className="w-full resize-none rounded-2xl border border-slate-200 bg-white p-4 text-sm text-slate-700 outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+      <RichTextEditor
+        editorRef={editorRef}
+        initialHtml={note.content}
+        placeholder="Start writing... insert images anywhere with 🖼️ Insert Image"
       />
 
-      {images.length > 0 ? (
-        <div className="mt-3 grid grid-cols-3 gap-2">
-          {images.map((img) => (
-            <div key={img.id} className="group relative">
-              <img
-                src={img.url}
-                alt={img.name}
-                className="h-24 w-full rounded-xl object-cover"
-              />
-              <button
-                type="button"
-                onClick={() => handleDeleteAttachment(img.id)}
-                className="absolute -right-1 -top-1 hidden h-6 w-6 items-center justify-center rounded-full bg-white text-xs text-red-500 shadow ring-1 ring-slate-200 group-hover:flex"
-                aria-label="Remove image"
-              >
-                ✕
-              </button>
-            </div>
-          ))}
-        </div>
-      ) : null}
-
-      {files.length > 0 ? (
+      {attachments.length > 0 ? (
         <div className="mt-3 flex flex-col gap-2">
-          {files.map((file) => (
+          <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+            Attached Files
+          </p>
+          {attachments.map((file) => (
             <FileRow
               key={file.id}
               file={file}

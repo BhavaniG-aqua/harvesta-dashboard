@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import Card from "../common/Card";
+import { stripHtml } from "../../utils/html";
 
 // Compact note summary card for the Notes list.
 function NoteCard({ note }) {
-  const preview = note.content?.slice(0, 80) || "No content yet";
+  const preview = stripHtml(note.content).slice(0, 80) || "No content yet";
   const attachmentCount = note.attachments?.length || 0;
 
   return (

@@ -106,7 +106,7 @@ export const notesMock = [
   {
     id: "note-1",
     title: "Interview questions",
-    content: "Common HR questions to prep for:\n- Tell me about yourself\n- Why this company?",
+    content: "Common HR questions to prep for:<br>- Tell me about yourself<br>- Why this company?",
     attachments: [],
     updatedAt: "2025-09-14",
   },

@@ -5,6 +5,7 @@ import Button from "../../components/common/Button";
 import EmptyState from "../../components/common/EmptyState";
 import NoteCard from "../../components/notes/NoteCard";
 import { useNotesContext } from "../../services/NotesContext";
+import { stripHtml } from "../../utils/html";
 
 function NotesListPage() {
   const { notes, createNote } = useNotesContext();
@@ -17,7 +18,7 @@ function NotesListPage() {
     return notes.filter(
       (n) =>
         n.title?.toLowerCase().includes(q) ||
-        n.content?.toLowerCase().includes(q)
+        stripHtml(n.content).toLowerCase().includes(q)
     );
   }, [notes, search]);
 

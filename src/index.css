@@ -31,3 +31,19 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Word-style note editor: placeholder text + inline image sizing */
+.note-editor:empty::before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+  pointer-events: none;
+}
+.note-editor img {
+  max-width: 100%;
+  border-radius: 0.75rem;
+  margin: 0.5rem 0;
+  display: block;
+}
+.note-editor p {
+  margin: 0 0 0.5rem 0;
+}
