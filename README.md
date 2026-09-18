@@ -28,7 +28,7 @@ npm run preview   # preview production build
 | Phase | Area | Status |
 |-------|------|--------|
 | 1 | React foundation, routing, mobile-first layout | ✅ |
-| 2 | Placements — create / edit / delete events | ✅ |
+| 2 | Placements — create / edit / delete events, calendar view, event reminders | ✅ |
 | 3 | Preparation — categories & topics CRUD, rename, status filters | ✅ |
 | 4 | Interview File Manager — nested folders, rename, upload/download, delete | ✅ |
 | 5 | Health — daily log, fruit reminders driven by Settings | ✅ |
@@ -95,6 +95,18 @@ src/
 ## Notes on Implementation
 
 - **No CSE/IT bias**: Preparation categories/topics are fully user-defined.
+- **Placements calendar + reminders**: `/placements` has a List/Calendar
+  toggle. The calendar (`PlacementCalendar`) shows a month grid with a dot
+  on any day that has an event; selecting a day shows that day's events
+  below (`SelectedDayEvents`). `useEventReminders` watches all placement
+  events and fires a **silent** browser Notification 1 day before and 1
+  hour before each event's date+time (parsed from the free-text `time`
+  field via `utils/eventTime.js`). Each reminder fires at most once per
+  event (deduped in localStorage). This only works while the site is open
+  in a browser tab — there's no service worker / push backend, which is
+  intentional per Section 19 ("do not create a complicated notification
+  backend"). `EventRemindersWatcher` is mounted once near the app root so
+  it keeps checking regardless of which page is open.
 - **Nested folders**: `useInterviewFiles` models folders with
   `parentFolderId`, mirroring the intended Supabase schema. Folders and
   files support create/rename/delete; files support upload/download
