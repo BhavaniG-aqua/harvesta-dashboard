@@ -143,8 +143,8 @@ function NoteEditorPage() {
     <div>
       <BackLink to="/notes" label="Back to Notes" />
 
-      {/* All page-level actions live together at the top. */}
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      {/* All page-level actions live together at the top, on one scrollable row. */}
+      <div className="no-scrollbar mb-4 flex items-center gap-2 overflow-x-auto">
         <input
           ref={imageInputRef}
           type="file"
@@ -152,7 +152,7 @@ function NoteEditorPage() {
           className="hidden"
           onChange={handleInsertImage}
         />
-        <Button variant="secondary" onClick={() => imageInputRef.current?.click()}>
+        <Button variant="secondary" className="shrink-0" onClick={() => imageInputRef.current?.click()}>
           🖼️ Insert Image
         </Button>
 
@@ -163,23 +163,23 @@ function NoteEditorPage() {
           className="hidden"
           onChange={handleAttachFile}
         />
-        <Button variant="secondary" onClick={() => fileInputRef.current?.click()}>
+        <Button variant="secondary" className="shrink-0" onClick={() => fileInputRef.current?.click()}>
           📎 Attach File
         </Button>
 
-        <Button variant="secondary" onClick={handleDownloadNote}>
+        <Button variant="secondary" className="shrink-0" onClick={handleDownloadNote}>
           ⬇️ Download
         </Button>
 
-        <Button variant="danger" onClick={handleDelete}>
+        <Button variant="danger" className="shrink-0" onClick={handleDelete}>
           🗑️ Delete
         </Button>
 
-        <div className="flex-1" />
-
-        <Button onClick={handleSave}>💾 Save</Button>
+        <Button className="ml-auto shrink-0" onClick={handleSave}>
+          💾 Save
+        </Button>
         {saved ? (
-          <span className="text-xs font-medium text-success-600">Saved ✓</span>
+          <span className="shrink-0 text-xs font-medium text-success-600">Saved ✓</span>
         ) : null}
       </div>
 

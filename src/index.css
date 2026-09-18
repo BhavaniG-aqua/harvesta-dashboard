@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  /* Primary brand — indigo/violet, more distinctive than plain blue */
-  --color-brand-50: #f5f3ff;
-  --color-brand-100: #ede9fe;
-  --color-brand-200: #ddd6fe;
-  --color-brand-300: #c4b5fd;
-  --color-brand-400: #a78bfa;
-  --color-brand-500: #8b5cf6;
-  --color-brand-600: #7c3aed;
-  --color-brand-700: #6d28d9;
-  --color-brand-800: #5b21b6;
+  /* Primary brand — warm brown/tan palette (per user-provided reference) */
+  --color-brand-50: #fdf6ee;
+  --color-brand-100: #f7e4cd;
+  --color-brand-200: #eecba3;
+  --color-brand-300: #dda876;
+  --color-brand-400: #c2854f;
+  --color-brand-500: #a06a3a;
+  --color-brand-600: #82532e;
+  --color-brand-700: #603d23;
+  --color-brand-800: #402a18;
 
   /* Accent — warm coral, used sparingly for highlights/CTAs */
   --color-accent-100: #ffe4e6;
@@ -25,7 +25,7 @@
   --color-success-600: #059669;
 
   /* Warm background tint for cards / sections */
-  --color-canvas: #faf9fc;
+  --color-canvas: #fdf9f4;
 
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -39,7 +39,7 @@ body,
 body {
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
-  background: linear-gradient(180deg, #f5f3ff 0%, #faf9fc 220px, #faf9fc 100%);
+  background: linear-gradient(180deg, #fdf6ee 0%, #fdf9f4 220px, #fdf9f4 100%);
 }
 
 /* Hide scrollbar but keep scroll for horizontal chip rows etc. */
@@ -73,7 +73,7 @@ body {
 }
 .card-interactive:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px -6px rgba(124, 58, 237, 0.18);
+  box-shadow: 0 8px 20px -6px rgba(130, 83, 46, 0.2);
 }
 
 /* Basic prose styling for the docx->HTML preview (mammoth output) since

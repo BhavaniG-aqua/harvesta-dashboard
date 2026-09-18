@@ -8,7 +8,7 @@ root for the full product spec and constraints.
 
 - React 19 + Vite
 - React Router v7
-- Tailwind CSS v4 (via `@tailwindcss/vite`) — custom violet/coral palette (see `src/index.css` `@theme`)
+- Tailwind CSS v4 (via `@tailwindcss/vite`) — custom warm brown/tan + coral palette (see `src/index.css` `@theme`)
 - `mammoth` (docx → HTML) and `xlsx` (xls/xlsx/csv → table) for in-browser file preview, both lazy-loaded via dynamic `import()` so they don't bloat the initial bundle
 - **No backend yet.** All data lives in `localStorage` via small domain
   hooks (see `src/hooks/`) wrapped in React Context providers
