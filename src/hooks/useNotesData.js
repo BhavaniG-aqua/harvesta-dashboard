@@ -5,8 +5,9 @@ import { notesMock } from "../data/mockData";
 const todayStr = () => new Date().toISOString().slice(0, 10);
 
 // Persisted state hook for General Notes.
-// Note: inserted image blob URLs are session-only (they expire on reload)
-// until Phase 8 swaps them for real Supabase Storage URLs.
+// Note: `attachments` (images + files) hold session-only blob URLs until
+// Phase 8 swaps them for real Supabase Storage URLs in the
+// `note_attachments` table / `note-attachments` bucket.
 export function useNotesData() {
   const [notes, setNotes] = useLocalStorageState("dashboard.notes", notesMock);
 
@@ -18,7 +19,7 @@ export function useNotesData() {
   const createNote = useCallback(() => {
     const id = `note-${Date.now()}`;
     setNotes((prev) => [
-      { id, title: "Untitled note", content: "", images: [], updatedAt: todayStr() },
+      { id, title: "Untitled note", content: "", attachments: [], updatedAt: todayStr() },
       ...prev,
     ]);
     return id;

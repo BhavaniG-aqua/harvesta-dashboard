@@ -98,19 +98,23 @@ export const interviewFilesMock = [
 // ---------------------------------------------------------------------------
 // Notes
 // ---------------------------------------------------------------------------
+// `attachments` holds BOTH inline images and general file attachments
+// (pdf, doc, etc.) for a note — mirrors the Interview Files shape
+// ({ id, name, type, size, url, createdAt }) so the same FileRow-style
+// UI and Supabase Storage pattern can be reused (Section 15).
 export const notesMock = [
   {
     id: "note-1",
     title: "Interview questions",
     content: "Common HR questions to prep for:\n- Tell me about yourself\n- Why this company?",
-    images: [],
+    attachments: [],
     updatedAt: "2025-09-14",
   },
   {
     id: "note-2",
     title: "Siemens campus notes",
     content: "Reach venue by 9 AM. Carry 2 photocopies of resume.",
-    images: [],
+    attachments: [],
     updatedAt: "2025-09-15",
   },
 ];
