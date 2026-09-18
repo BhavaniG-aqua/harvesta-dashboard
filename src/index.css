@@ -1,22 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  /* Primary brand — warm brown/tan palette (per user-provided reference) */
-  --color-brand-50: #fdf6ee;
-  --color-brand-100: #f7e4cd;
-  --color-brand-200: #eecba3;
-  --color-brand-300: #dda876;
-  --color-brand-400: #c2854f;
-  --color-brand-500: #a06a3a;
-  --color-brand-600: #82532e;
-  --color-brand-700: #603d23;
-  --color-brand-800: #402a18;
+  /* Primary brand — teal, clean and professional */
+  --color-brand-50: #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-brand-200: #99f6e4;
+  --color-brand-300: #5eead4;
+  --color-brand-400: #2dd4bf;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+  --color-brand-800: #115e59;
 
-  /* Accent — warm coral, used sparingly for highlights/CTAs */
-  --color-accent-100: #ffe4e6;
-  --color-accent-400: #fb7185;
-  --color-accent-500: #f43f5e;
-  --color-accent-600: #e11d48;
+  /* Accent — warm amber, used sparingly for highlights/CTAs/delete actions */
+  --color-accent-100: #ffedd5;
+  --color-accent-400: #fb923c;
+  --color-accent-500: #f97316;
+  --color-accent-600: #ea580c;
 
   /* Success / positive */
   --color-success-50: #ecfdf5;
@@ -24,8 +24,8 @@
   --color-success-500: #10b981;
   --color-success-600: #059669;
 
-  /* Warm background tint for cards / sections */
-  --color-canvas: #fdf9f4;
+  /* Cool background tint for cards / sections */
+  --color-canvas: #f7fafc;
 
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -39,7 +39,7 @@ body,
 body {
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
-  background: linear-gradient(180deg, #fdf6ee 0%, #fdf9f4 220px, #fdf9f4 100%);
+  background: linear-gradient(180deg, #f0fdfa 0%, #f7fafc 220px, #f7fafc 100%);
 }
 
 /* Hide scrollbar but keep scroll for horizontal chip rows etc. */
@@ -73,7 +73,7 @@ body {
 }
 .card-interactive:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px -6px rgba(130, 83, 46, 0.2);
+  box-shadow: 0 8px 20px -6px rgba(13, 148, 136, 0.2);
 }
 
 /* Basic prose styling for the docx->HTML preview (mammoth output) since
