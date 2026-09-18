@@ -6,16 +6,16 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Primary brand — teal, clean and professional */
-  --color-brand-50: #f0fdfa;
-  --color-brand-100: #ccfbf1;
-  --color-brand-200: #99f6e4;
-  --color-brand-300: #5eead4;
-  --color-brand-400: #2dd4bf;
-  --color-brand-500: #14b8a6;
-  --color-brand-600: #0d9488;
-  --color-brand-700: #0f766e;
-  --color-brand-800: #115e59;
+  /* Primary brand — sea blue/teal palette */
+  --color-brand-50: #f6f6f2;
+  --color-brand-100: #e4f1f2;
+  --color-brand-200: #badfe7;
+  --color-brand-300: #9ccdd6;
+  --color-brand-400: #6fb3b8;
+  --color-brand-500: #4f9aa1;
+  --color-brand-600: #388087;
+  --color-brand-700: #2c666c;
+  --color-brand-800: #1f4a4f;
 
   /* Accent — warm amber, used sparingly for highlights/CTAs/delete actions */
   --color-accent-100: #ffedd5;
@@ -30,7 +30,7 @@
   --color-success-600: #059669;
 
   /* Cool background tint for cards / sections */
-  --color-canvas: #f7fafc;
+  --color-canvas: #f6f6f2;
 
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -44,7 +44,7 @@ body,
 body {
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
-  background: linear-gradient(180deg, #f0fdfa 0%, #f7fafc 220px, #f7fafc 100%);
+  background: linear-gradient(180deg, #e4f1f2 0%, #f6f6f2 220px, #f6f6f2 100%);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -83,7 +83,7 @@ body {
 }
 .card-interactive:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px -6px rgba(13, 148, 136, 0.2);
+  box-shadow: 0 8px 20px -6px rgba(44, 102, 108, 0.2);
 }
 .dark .card-interactive:hover {
   box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.5);

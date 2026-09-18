@@ -1,4 +1,4 @@
-# Friend Dashboard — Phases 1–7 (React Frontend Complete)
+# Harvesta — Phases 1–7 (React Frontend Complete)
 
 A lightweight, mobile-first personal dashboard built for a friend's campus
 placement season. See `Personal_Dashboard_Master_Context.md` in the repo
@@ -8,7 +8,7 @@ root for the full product spec and constraints.
 
 - React 19 + Vite
 - React Router v7
-- Tailwind CSS v4 (via `@tailwindcss/vite`) — custom teal + amber palette (see `src/index.css` `@theme`), with a full light/dark theme toggle (`ThemeContext` + `ThemeToggle`, class-based via `@custom-variant dark`)
+- Tailwind CSS v4 (via `@tailwindcss/vite`) — custom sea-blue + amber palette (see `src/index.css` `@theme`), with a full light/dark theme toggle (`ThemeContext` + `ThemeToggle`, class-based via `@custom-variant dark`)
 - `mammoth` (docx → HTML) and `xlsx` (xls/xlsx/csv → table) for in-browser file preview, both lazy-loaded via dynamic `import()` so they don't bloat the initial bundle
 - **No backend yet.** All data lives in `localStorage` via small domain
   hooks (see `src/hooks/`) wrapped in React Context providers
