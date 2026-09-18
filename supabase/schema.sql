@@ -169,10 +169,19 @@ create policy "allow all" on inspiration_content for all using (true) with check
 create policy "allow all" on settings for all using (true) with check (true);
 
 -- ---------------------------------------------------------------------------
--- Storage buckets (create via Supabase Dashboard -> Storage, or SQL below)
+-- Storage buckets
+-- If you already created these buckets via Supabase Dashboard -> Storage,
+-- these inserts are safe to re-run (idempotent via ON CONFLICT DO NOTHING).
+-- Bucket names must match EXACTLY what you created in the dashboard:
+--   interview-files
+--   note-attachments
 -- ---------------------------------------------------------------------------
-insert into storage.buckets (id, name, public) values ('interview-files', 'interview-files', true);
-insert into storage.buckets (id, name, public) values ('note-attachments', 'note-attachments', true);
+insert into storage.buckets (id, name, public)
+  values ('interview-files', 'interview-files', true)
+  on conflict (id) do nothing;
+insert into storage.buckets (id, name, public)
+  values ('note-attachments', 'note-attachments', true)
+  on conflict (id) do nothing;
 
 create policy "allow all interview-files" on storage.objects for all
   using (bucket_id = 'interview-files') with check (bucket_id = 'interview-files');
