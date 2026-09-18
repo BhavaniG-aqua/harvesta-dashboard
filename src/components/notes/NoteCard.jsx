@@ -9,7 +9,7 @@ function NoteCard({ note }) {
 
   return (
     <Link to={`/notes/${note.id}`}>
-      <Card className="transition-shadow hover:shadow-md">
+      <Card interactive>
         <p className="text-sm font-semibold text-slate-900">
           {note.title || "Untitled note"}
         </p>

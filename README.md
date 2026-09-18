@@ -8,7 +8,8 @@ root for the full product spec and constraints.
 
 - React 19 + Vite
 - React Router v7
-- Tailwind CSS v4 (via `@tailwindcss/vite`)
+- Tailwind CSS v4 (via `@tailwindcss/vite`) — custom violet/coral palette (see `src/index.css` `@theme`)
+- `mammoth` (docx → HTML) and `xlsx` (xls/xlsx/csv → table) for in-browser file preview, both lazy-loaded via dynamic `import()` so they don't bloat the initial bundle
 - **No backend yet.** All data lives in `localStorage` via small domain
   hooks (see `src/hooks/`) wrapped in React Context providers
   (`src/services/`). Supabase integration is Phase 8 — not started.
@@ -99,6 +100,22 @@ src/
   calendar (`PlacementCalendar`) shows a month grid with a dot on any day
   that has an event; selecting a day shows that day's events below
   (`SelectedDayEvents`).
+- **File preview & editing (`FileViewerModal`)**: clicking any file row
+  (Interview Prep files, Note attachments) opens a modal that renders:
+  images and SVG inline, PDFs via `<iframe>`, `.txt`/`.py` as editable
+  plain text (Edit → Save writes back through `updateFileContent` /
+  `onSaveText`), `.docx`/`.doc` converted to HTML via `mammoth`, and
+  `.csv`/`.xls`/`.xlsx` rendered as a real table (with a sheet-tab
+  switcher for multi-sheet workbooks) via `xlsx`. `.ppt`/`.pptx` have no
+  lightweight in-browser renderer, so the modal clearly says so and
+  offers Download instead. Images are read-only (can only be deleted),
+  per spec.
+- **Inspiration cycles daily, not randomly**: `useInspirationData.getTodayItem()`
+  picks `dayIndex() % items.length` (days since epoch, local time) so
+  the Dashboard shows a different quote/image every calendar day and
+  only repeats once every item has been shown exactly once. Content now
+  supports three types: motivation quotes, funny text, and uploaded
+  images (with an optional caption) — manage all three from `/inspiration`.
 - **Nested folders**: `useInterviewFiles` models folders with
   `parentFolderId`, mirroring the intended Supabase schema. Folders and
   files support create/rename/delete; files support upload/download
@@ -114,9 +131,10 @@ src/
   them via `saveLogForDate` when the Save button is pressed — no more
   auto-save on every toggle. A Today/Yesterday selector
   (`DaySelector`) lets the user correct either day's entry. A separate
-  History tab (`HealthTabs`) has a Month/Year picker (`MonthYearPicker`)
-  that browses `getLogsForMonth(year, month)` — the fruit-reminder
-  feature was removed entirely (no more reminder days/times in Settings).
+  History tab (`HealthTabs`) has two compact Month/Year `<select>`
+  dropdowns (`MonthYearPicker`) — not a single wide button — that browse
+  `getLogsForMonth(year, month)`. The fruit-reminder feature was removed
+  entirely (no more reminder days/times in Settings).
 - **Mobile-first**: `AppLayout` renders a bottom tab bar on mobile and a
   sidebar on desktop (`md:` breakpoint switch).
 - **Persistence today, Supabase tomorrow**: all domain hooks

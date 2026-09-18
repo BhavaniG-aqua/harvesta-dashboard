@@ -7,6 +7,7 @@ import FileRow from "../../components/files/FileRow";
 import RichTextEditor from "../../components/notes/RichTextEditor";
 import { useNotesContext } from "../../services/NotesContext";
 import { stripHtml } from "../../utils/html";
+import { getPreviewCategory } from "../../utils/fileTypes";
 
 // Word-style notepad editor for a single note.
 //
@@ -96,12 +97,6 @@ function NoteEditorPage() {
     selection?.addRange(range);
   }
 
-  function detectAttachmentType(file) {
-    const ext = file.name.split(".").pop()?.toLowerCase();
-    if (ext === "pdf") return "pdf";
-    return "doc";
-  }
-
   function handleAttachFile(e) {
     const file = e.target.files?.[0];
     e.target.value = "";
@@ -112,12 +107,24 @@ function NoteEditorPage() {
       {
         id: `att-${Date.now()}`,
         name: file.name,
-        type: detectAttachmentType(file),
+        type: getPreviewCategory(file.name),
         size: `${Math.max(1, Math.round(file.size / 1024))} KB`,
         url: URL.createObjectURL(file),
         createdAt: new Date().toISOString().slice(0, 10),
       },
     ]);
+  }
+
+  function handleSaveAttachmentText(file, newText) {
+    const blob = new Blob([newText], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    setAttachments((prev) =>
+      prev.map((a) =>
+        a.id === file.id
+          ? { ...a, url, size: `${Math.max(1, Math.round(blob.size / 1024))} KB` }
+          : a
+      )
+    );
   }
 
   function handleDeleteAttachment(id) {
@@ -153,6 +160,7 @@ function NoteEditorPage() {
               key={file.id}
               file={file}
               onDelete={handleDeleteAttachment}
+              onSaveText={handleSaveAttachmentText}
             />
           ))}
         </div>
@@ -173,6 +181,7 @@ function NoteEditorPage() {
         <input
           ref={fileInputRef}
           type="file"
+          accept=".txt,.py,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.svg"
           className="hidden"
           onChange={handleAttachFile}
         />

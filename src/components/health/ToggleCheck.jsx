@@ -5,10 +5,10 @@ function ToggleCheck({ label, icon, checked, onChange }) {
       type="button"
       onClick={() => onChange(!checked)}
       className={[
-        "flex flex-1 flex-col items-center gap-1 rounded-2xl border p-4 transition-colors",
+        "flex flex-1 flex-col items-center gap-1 rounded-2xl border p-4 transition-all",
         checked
-          ? "border-emerald-200 bg-emerald-50"
-          : "border-slate-200 bg-white",
+          ? "border-success-500/30 bg-success-50 shadow-sm shadow-success-500/10"
+          : "border-slate-200 bg-white hover:border-slate-300",
       ].join(" ")}
     >
       <span className="text-2xl">{icon}</span>
@@ -16,7 +16,7 @@ function ToggleCheck({ label, icon, checked, onChange }) {
       <span
         className={[
           "text-lg font-semibold",
-          checked ? "text-emerald-600" : "text-slate-400",
+          checked ? "text-success-600" : "text-slate-400",
         ].join(" ")}
       >
         {checked ? "✓" : "✗"}

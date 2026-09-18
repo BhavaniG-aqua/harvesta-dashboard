@@ -1,9 +1,32 @@
 import Card from "../common/Card";
 import ConfirmButton from "../common/ConfirmButton";
 
-// A single inspiration content card (motivation quote or funny text),
-// used in the Inspiration management page.
+// A single inspiration content card (motivation quote, funny text, or
+// uploaded image), used in the Inspiration management page.
 function InspirationItemCard({ item, onDelete }) {
+  if (item.type === "image") {
+    return (
+      <Card className="overflow-hidden" padded={false}>
+        <div className="relative">
+          <img
+            src={item.imageUrl}
+            alt={item.caption || "Inspiration"}
+            className="max-h-72 w-full object-cover"
+          />
+          <ConfirmButton
+            label="🗑️"
+            confirmLabel="Delete?"
+            onConfirm={() => onDelete(item.id)}
+            className="absolute right-2 top-2"
+          />
+        </div>
+        {item.caption ? (
+          <p className="p-3 text-sm text-slate-600">{item.caption}</p>
+        ) : null}
+      </Card>
+    );
+  }
+
   const isFunny = item.type === "funny";
 
   return (

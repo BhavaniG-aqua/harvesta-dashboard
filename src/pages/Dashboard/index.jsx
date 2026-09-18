@@ -14,7 +14,7 @@ import { useSettingsContext } from "../../services/SettingsContext";
 function DashboardPage() {
   const { events } = usePlacementsContext();
   const { todayLog } = useHealthContext();
-  const { getRandomItem } = useInspirationContext();
+  const { getTodayItem } = useInspirationContext();
   const { settings } = useSettingsContext();
 
   const sortedEvents = useMemo(
@@ -24,8 +24,8 @@ function DashboardPage() {
 
   const [nextEvent, ...restEvents] = sortedEvents;
 
-  // Picked once per page load (not on every render).
-  const inspirationItem = useMemo(() => getRandomItem(), []); // eslint-disable-line react-hooks/exhaustive-deps
+  // Cycles once per calendar day through every inspiration item.
+  const inspirationItem = useMemo(() => getTodayItem(), []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="flex flex-col gap-6">

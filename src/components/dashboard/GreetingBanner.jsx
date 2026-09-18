@@ -6,11 +6,11 @@ function GreetingBanner({ name }) {
 
   return (
     <div>
-      <p className="text-lg font-semibold text-slate-900 md:text-xl">
+      <p className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
         {getGreeting(today)}
-        {name ? `, ${name}` : ""} 👋
+        {name ? `, ${name}` : ""} <span className="inline-block">👋</span>
       </p>
-      <p className="text-sm text-slate-500">{formatFullDate(today)}</p>
+      <p className="mt-1 text-sm text-slate-500">{formatFullDate(today)}</p>
     </div>
   );
 }

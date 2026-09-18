@@ -8,6 +8,7 @@ import InlineAddForm from "../../components/common/InlineAddForm";
 import EmptyState from "../../components/common/EmptyState";
 import Button from "../../components/common/Button";
 import { useInterviewFilesContext } from "../../services/InterviewFilesContext";
+import { getPreviewCategory } from "../../utils/fileTypes";
 
 function InterviewFolderDetailPage() {
   const { folderId } = useParams();
@@ -23,6 +24,7 @@ function InterviewFolderDetailPage() {
     addFile,
     deleteFolder,
     deleteFile,
+    updateFileContent,
   } = useInterviewFilesContext();
 
   const folder = getFolder(folderId);
@@ -45,9 +47,7 @@ function InterviewFolderDetailPage() {
   function handleFileSelected(e) {
     const file = e.target.files?.[0];
     if (!file) return;
-    const ext = file.name.split(".").pop()?.toLowerCase();
-    const type =
-      ext === "pdf" ? "pdf" : ["png", "jpg", "jpeg"].includes(ext) ? "image" : "doc";
+    const type = getPreviewCategory(file.name);
     addFile(folderId, {
       name: file.name,
       type,
@@ -118,6 +118,7 @@ function InterviewFolderDetailPage() {
         <input
           ref={fileInputRef}
           type="file"
+          accept=".txt,.py,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.png,.jpg,.jpeg,.svg"
           className="hidden"
           onChange={handleFileSelected}
         />
@@ -148,7 +149,12 @@ function InterviewFolderDetailPage() {
       ) : (
         <div className="flex flex-col gap-2">
           {filesHere.map((file) => (
-            <FileRow key={file.id} file={file} onDelete={deleteFile} />
+            <FileRow
+              key={file.id}
+              file={file}
+              onDelete={deleteFile}
+              onSaveText={(f, text) => updateFileContent(f.id, text)}
+            />
           ))}
         </div>
       )}

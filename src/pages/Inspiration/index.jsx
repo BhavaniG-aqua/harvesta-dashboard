@@ -5,12 +5,17 @@ import AddInspirationForm from "../../components/motivation/AddInspirationForm";
 import EmptyState from "../../components/common/EmptyState";
 import { useInspirationContext } from "../../services/InspirationContext";
 
+const TABS = [
+  { id: "motivation", label: "✨ Motivation" },
+  { id: "funny", label: "😄 Funny" },
+  { id: "image", label: "🖼️ Images" },
+];
+
 function InspirationPage() {
-  const { motivationItems, funnyItems, addItem, deleteItem } =
-    useInspirationContext();
+  const { items, deleteItem, addItem } = useInspirationContext();
   const [tab, setTab] = useState("motivation");
 
-  const activeItems = tab === "motivation" ? motivationItems : funnyItems;
+  const activeItems = items.filter((i) => i.type === tab);
 
   return (
     <div>
@@ -20,30 +25,21 @@ function InspirationPage() {
       />
 
       <div className="mb-4 flex gap-2 border-b border-slate-200">
-        <button
-          type="button"
-          onClick={() => setTab("motivation")}
-          className={[
-            "border-b-2 -mb-px px-1 pb-2.5 text-sm font-medium transition-colors",
-            tab === "motivation"
-              ? "border-brand-600 text-brand-700"
-              : "border-transparent text-slate-400 hover:text-slate-600",
-          ].join(" ")}
-        >
-          ✨ Motivation
-        </button>
-        <button
-          type="button"
-          onClick={() => setTab("funny")}
-          className={[
-            "border-b-2 -mb-px px-1 pb-2.5 text-sm font-medium transition-colors",
-            tab === "funny"
-              ? "border-brand-600 text-brand-700"
-              : "border-transparent text-slate-400 hover:text-slate-600",
-          ].join(" ")}
-        >
-          😄 Funny
-        </button>
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => setTab(t.id)}
+            className={[
+              "border-b-2 -mb-px px-1 pb-2.5 text-sm font-medium transition-colors",
+              tab === t.id
+                ? "border-brand-600 text-brand-700"
+                : "border-transparent text-slate-400 hover:text-slate-600",
+            ].join(" ")}
+          >
+            {t.label}
+          </button>
+        ))}
       </div>
 
       <div className="mb-4">
@@ -52,9 +48,9 @@ function InspirationPage() {
 
       {activeItems.length === 0 ? (
         <EmptyState
-          icon={tab === "motivation" ? "✨" : "😄"}
+          icon={tab === "motivation" ? "✨" : tab === "funny" ? "😄" : "🖼️"}
           title="Nothing here yet"
-          description="Add a quote, story, or something funny to see it appear here and occasionally on the Dashboard."
+          description="Add a quote, image, or something funny — it will appear here and cycle into the Dashboard's daily pick."
         />
       ) : (
         <div className="flex flex-col gap-3">

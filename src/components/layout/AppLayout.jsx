@@ -6,7 +6,7 @@ import BottomNav from "../navigation/BottomNav";
 // and a scrollable content area in between.
 function AppLayout() {
   return (
-    <div className="flex min-h-screen bg-slate-50 text-slate-900">
+    <div className="flex min-h-screen bg-transparent text-slate-900">
       <Sidebar />
 
       <div className="flex min-h-screen flex-1 flex-col">

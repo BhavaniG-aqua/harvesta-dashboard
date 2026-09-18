@@ -6,7 +6,7 @@ import { formatShortDate } from "../../utils/date";
 function PlacementCard({ event }) {
   return (
     <Link to={`/placements/${event.id}`}>
-      <Card className="transition-shadow hover:shadow-md">
+      <Card interactive>
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-base font-semibold text-slate-900">

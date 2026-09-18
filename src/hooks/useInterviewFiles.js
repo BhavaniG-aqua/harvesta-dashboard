@@ -118,6 +118,23 @@ export function useInterviewFiles() {
     [setFiles]
   );
 
+  // Replaces a text-based file's content (used when editing .txt/.py
+  // files in the FileViewer) — regenerates the blob URL and updated size.
+  const updateFileContent = useCallback(
+    (fileId, newText) => {
+      const blob = new Blob([newText], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      setFiles((prev) =>
+        prev.map((f) =>
+          f.id === fileId
+            ? { ...f, url, size: `${Math.max(1, Math.round(blob.size / 1024))} KB` }
+            : f
+        )
+      );
+    },
+    [setFiles]
+  );
+
   return {
     folders,
     files,
@@ -130,5 +147,6 @@ export function useInterviewFiles() {
     deleteFolder,
     addFile,
     deleteFile,
+    updateFileContent,
   };
 }

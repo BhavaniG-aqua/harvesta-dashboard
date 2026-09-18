@@ -14,9 +14,9 @@ function MealCountSelector({ value, onChange }) {
               type="button"
               onClick={() => onChange(count)}
               className={[
-                "flex-1 rounded-xl py-3 text-sm font-semibold transition-colors",
+                "flex-1 rounded-xl py-3 text-sm font-semibold transition-all",
                 isActive
-                  ? "bg-brand-600 text-white"
+                  ? "bg-gradient-to-br from-brand-500 to-brand-600 text-white shadow-sm shadow-brand-600/20"
                   : "bg-slate-100 text-slate-500 hover:bg-slate-200",
               ].join(" ")}
             >

@@ -1,38 +1,39 @@
 import { MONTH_NAMES } from "../../utils/date";
 
-// Month/Year selector for browsing health history one month at a time.
-function MonthYearPicker({ year, month, onChange }) {
-  function goToPrevMonth() {
-    if (month === 0) onChange(year - 1, 11);
-    else onChange(year, month - 1);
-  }
-
-  function goToNextMonth() {
-    if (month === 11) onChange(year + 1, 0);
-    else onChange(year, month + 1);
-  }
+// Two compact dropdowns (Month, Year) — sits flush right, works well on
+// both mobile and desktop without a single oversized button.
+function MonthYearPicker({ year, month, onChange, minYear }) {
+  const currentYear = new Date().getFullYear();
+  const startYear = minYear ?? currentYear - 5;
+  const years = [];
+  for (let y = currentYear + 1; y >= startYear; y--) years.push(y);
 
   return (
-    <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-3 py-2">
-      <button
-        type="button"
-        onClick={goToPrevMonth}
-        aria-label="Previous month"
-        className="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100"
+    <div className="flex items-center justify-end gap-2">
+      <select
+        value={month}
+        onChange={(e) => onChange(year, Number(e.target.value))}
+        aria-label="Month"
+        className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
       >
-        ‹
-      </button>
-      <p className="text-sm font-semibold text-slate-800">
-        {MONTH_NAMES[month]} {year}
-      </p>
-      <button
-        type="button"
-        onClick={goToNextMonth}
-        aria-label="Next month"
-        className="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100"
+        {MONTH_NAMES.map((name, index) => (
+          <option key={name} value={index}>
+            {name}
+          </option>
+        ))}
+      </select>
+      <select
+        value={year}
+        onChange={(e) => onChange(Number(e.target.value), month)}
+        aria-label="Year"
+        className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
       >
-        ›
-      </button>
+        {years.map((y) => (
+          <option key={y} value={y}>
+            {y}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
