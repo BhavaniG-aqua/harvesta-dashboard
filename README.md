@@ -34,7 +34,7 @@ npm run preview   # preview production build
 | 4 | Interview File Manager — nested folders, rename, upload/download, delete | ✅ |
 | 5 | Health — daily log (Today/Yesterday editable, explicit Save) + monthly history browser | ✅ |
 | 6 | Notes — create/edit/delete/download/search, image insert, rich text formatting toolbar | ✅ |
-| 7 | Inspiration — manage motivation/funny content, shown on Dashboard | ✅ |
+| 7 | One More Thing — quiet daily quote/image feed shown on Dashboard (no add/upload UI; curated externally) | ✅ |
 | 8 | Supabase (Postgres + Storage) integration | ⏳ Not started |
 
 All data persists across page reloads via `localStorage` (see
@@ -56,7 +56,7 @@ src/
 │   ├── health/                  # Toggle, meal selector, sleep input, reminder card
 │   ├── notes/                     # Note card
 │   ├── files/                       # Folder/file manager UI pieces
-│   ├── motivation/                    # Inspiration item card, add form
+│   ├── onemorething/                  # OneMoreThingCard (read-only display)
 │   └── common/                          # Button, Card, PageHeader, FormField, ConfirmButton, etc.
 ├── pages/
 │   ├── Dashboard/
@@ -64,7 +64,7 @@ src/
 │   ├── Preparation/           (+ InterviewFilesRoot, InterviewFolderDetail)
 │   ├── Health/
 │   ├── Notes/                    (+ NoteEditor)
-│   ├── Inspiration/
+│   ├── OneMoreThing/
 │   └── Settings/
 ├── data/
 │   └── mockData.js       # seed data, shaped like the future Supabase schema
@@ -90,7 +90,7 @@ src/
 | `/health`                         | Health habit tracker                |
 | `/notes`                          | Notes list                          |
 | `/notes/:noteId`                  | Note editor                         |
-| `/inspiration`                    | Manage motivation/funny content      |
+| `/one-more-thing`                 | Quiet daily quote/image feed         |
 | `/settings`                       | Settings                            |
 
 ## Notes on Implementation
@@ -127,22 +127,23 @@ src/
   lightweight in-browser renderer, so the modal clearly says so and
   offers Download instead. Images are read-only (can only be deleted),
   per spec.
-- **Inspiration cycles daily, not randomly**: `useInspirationData.getTodayItem()`
+- **"One More Thing" cycles daily, not randomly, and is never explicitly
+  labeled as motivation/inspiration in the UI**: `useOneMoreThingData.getTodayItem()`
   picks `dayIndex() % items.length` (days since epoch, local time) so
   the Dashboard shows a different quote/image every calendar day and
-  only repeats once every item has been shown exactly once. Content now
-  supports three types: motivation quotes, funny text, and uploaded
-  images (with an optional caption) — manage all three from `/inspiration`.
+  only repeats once every item has been shown exactly once. There is
+  intentionally **no add/upload UI anywhere in the app** — content is
+  curated by hand in `mockData.js` today (a Supabase table in Phase 8);
+  the page at `/one-more-thing` is read-only, reachable via its own
+  bottom-nav/sidebar tab (below Notes) and a "See more" link on the
+  Dashboard.
 - **Nested folders**: `useInterviewFiles` models folders with
   `parentFolderId`, mirroring the intended Supabase schema. Folders and
   files support create/rename/delete; files support upload/download
   (download only works for files uploaded in the current session, since
   blob URLs aren't persisted).
-- **No progress-based motivation on the Dashboard**: only a single random
-  quote/joke is shown; no completion stats, streaks, etc. Full
-  Inspiration management lives at `/inspiration` (reachable via a "See
-  more" link on the Dashboard and a link on Settings) — kept out of the
-  main 6-item bottom nav per the master context's Section 8 spec.
+- **No progress-based motivation on the Dashboard**: only a single item
+  from "One More Thing" is shown; no completion stats, streaks, etc.
 - **Health edits require an explicit Save**: the Health page stages
   fruits/nuts/meals/sleep changes in local form state and only writes
   them via `saveLogForDate` when the Save button is pressed — no more
@@ -156,10 +157,11 @@ src/
   sidebar on desktop (`md:` breakpoint switch).
 - **Persistence today, Supabase tomorrow**: all domain hooks
   (`usePlacementsData`, `usePreparationData`, `useInterviewFiles`,
-  `useHealthData`, `useNotesData`, `useInspirationData`,
-  `useSettingsData`) use `useLocalStorageState` internally. Swapping to
-  Supabase later means replacing the *inside* of these hooks — the
-  components' props/behavior should not need to change.
+  `useHealthData`, `useNotesData`, `useOneMoreThingData` (read-only, no
+  persistence needed since there's no in-app write path),
+  `useSettingsData`) use `useLocalStorageState` internally where
+  relevant. Swapping to Supabase later means replacing the *inside* of
+  these hooks — the components' props/behavior should not need to change.
 
 ## Next Steps (do not start automatically — wait for instruction)
 

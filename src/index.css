@@ -44,7 +44,7 @@ body,
 body {
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
-  background: linear-gradient(180deg, #e4f1f2 0%, #f6f6f2 220px, #f6f6f2 100%);
+  background: #f6f6f2;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 

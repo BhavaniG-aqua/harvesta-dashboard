@@ -7,6 +7,7 @@ export const NAV_ITEMS = [
   { to: "/preparation", label: "Preparation", icon: "🎯" },
   { to: "/health", label: "Health", icon: "❤️" },
   { to: "/notes", label: "Notes", icon: "📝" },
+  { to: "/one-more-thing", label: "More", icon: "🌿" },
   { to: "/settings", label: "Settings", icon: "⚙️" },
 ];
 

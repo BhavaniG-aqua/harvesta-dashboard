@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import PageHeader from "../../components/common/PageHeader";
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
@@ -56,13 +55,6 @@ function SettingsPage() {
           <span className="text-xs font-medium text-success-600">Saved ✓</span>
         ) : null}
       </div>
-
-      <Link
-        to="/inspiration"
-        className="text-sm font-medium text-brand-600 hover:underline dark:text-brand-400"
-      >
-        ✨ Manage Inspiration Content →
-      </Link>
     </div>
   );
 }

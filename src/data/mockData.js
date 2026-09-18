@@ -129,9 +129,13 @@ export const healthDailyLogsMock = [
 ];
 
 // ---------------------------------------------------------------------------
-// Inspiration
+// One More Thing — a small daily quote/image shown on the Dashboard and
+// its own page, purely to lift the mood without ever being labeled
+// "motivation" or "inspiration" in the UI. This content is curated by
+// hand (added here during development today; will live in a Supabase
+// table in Phase 8) — there is intentionally no in-app add/upload UI.
 // ---------------------------------------------------------------------------
-export const inspirationContentMock = [
+export const oneMoreThingContentMock = [
   {
     id: "insp-1",
     type: "motivation",

@@ -6,7 +6,7 @@ import { PlacementsProvider } from "./services/PlacementsContext";
 import { InterviewFilesProvider } from "./services/InterviewFilesContext";
 import { NotesProvider } from "./services/NotesContext";
 import { HealthProvider } from "./services/HealthContext";
-import { InspirationProvider } from "./services/InspirationContext";
+import { OneMoreThingProvider } from "./services/OneMoreThingContext";
 
 import DashboardPage from "./pages/Dashboard";
 import PlacementsListPage from "./pages/Placements";
@@ -18,7 +18,7 @@ import InterviewFolderDetailPage from "./pages/Preparation/InterviewFolderDetail
 import HealthPage from "./pages/Health";
 import NotesListPage from "./pages/Notes";
 import NoteEditorPage from "./pages/Notes/NoteEditor";
-import InspirationPage from "./pages/Inspiration";
+import OneMoreThingPage from "./pages/OneMoreThing";
 import SettingsPage from "./pages/Settings";
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
           <PlacementsProvider>
             <InterviewFilesProvider>
               <NotesProvider>
-                <InspirationProvider>
+                <OneMoreThingProvider>
                   <HealthProvider>
                     <Routes>
                       <Route element={<AppLayout />}>
@@ -61,13 +61,13 @@ function App() {
                         <Route path="notes" element={<NotesListPage />} />
                         <Route path="notes/:noteId" element={<NoteEditorPage />} />
 
-                        <Route path="inspiration" element={<InspirationPage />} />
+                        <Route path="one-more-thing" element={<OneMoreThingPage />} />
 
                         <Route path="settings" element={<SettingsPage />} />
                       </Route>
                     </Routes>
                   </HealthProvider>
-                </InspirationProvider>
+                </OneMoreThingProvider>
               </NotesProvider>
             </InterviewFilesProvider>
           </PlacementsProvider>
