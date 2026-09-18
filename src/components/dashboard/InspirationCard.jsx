@@ -32,7 +32,7 @@ function InspirationCard({ item }) {
   }
 
   return (
-    <Card className="bg-gradient-to-br from-brand-50 to-accent-100/40">
+    <Card className="bg-gradient-to-br from-brand-50 to-brand-100/60">
       <p className="text-xs font-semibold uppercase tracking-wider text-brand-600">
         Quote of the day ✨
       </p>

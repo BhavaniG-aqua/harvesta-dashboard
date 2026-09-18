@@ -25,7 +25,7 @@ function NextEventCard({ event }) {
       : "Past";
 
   return (
-    <Card className="relative overflow-hidden bg-gradient-to-br from-brand-600 via-brand-600 to-accent-500 text-white">
+    <Card className="relative overflow-hidden bg-gradient-to-br from-brand-500 via-brand-600 to-brand-800 text-white">
       <div
         className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10"
         aria-hidden="true"
