@@ -1,9 +1,19 @@
 import Card from "../common/Card";
+import EmptyState from "../common/EmptyState";
 import { formatShortDate } from "../../utils/date";
 
-// Simple recent history list (last few daily logs), no charts/analytics.
-function RecentHistoryList({ logs }) {
-  if (!logs || logs.length === 0) return null;
+// Monthly health history list — shows every logged day within the
+// currently selected month/year. No charts/analytics, just raw entries.
+function MonthlyHistoryList({ logs }) {
+  if (!logs || logs.length === 0) {
+    return (
+      <EmptyState
+        icon="📆"
+        title="No entries for this month"
+        description="Switch months using the arrows above, or log today's habits from the Today tab."
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -24,4 +34,4 @@ function RecentHistoryList({ logs }) {
   );
 }
 
-export default RecentHistoryList;
+export default MonthlyHistoryList;

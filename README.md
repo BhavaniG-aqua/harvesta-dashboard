@@ -31,7 +31,7 @@ npm run preview   # preview production build
 | 2 | Placements — create / edit / delete events, calendar view | ✅ |
 | 3 | Preparation — categories & topics CRUD, rename, status filters | ✅ |
 | 4 | Interview File Manager — nested folders, rename, upload/download, delete | ✅ |
-| 5 | Health — daily log, fruit reminders driven by Settings | ✅ |
+| 5 | Health — daily log (Today/Yesterday editable, explicit Save) + monthly history browser | ✅ |
 | 6 | Notes — create/edit/delete/download/search, image insert | ✅ |
 | 7 | Inspiration — manage motivation/funny content, shown on Dashboard | ✅ |
 | 8 | Supabase (Postgres + Storage) integration | ⏳ Not started |
@@ -113,11 +113,10 @@ src/
   fruits/nuts/meals/sleep changes in local form state and only writes
   them via `saveLogForDate` when the Save button is pressed — no more
   auto-save on every toggle. A Today/Yesterday selector
-  (`DaySelector`) lets the user correct either day's entry.
-- **Settings-driven reminders**: `useHealthData` reads `reminderDays` /
-  `reminderTimes` from Settings and auto-generates today's fruit reminders
-  if today is a configured day. Reminders stay "pending" until marked
-  DONE, so they naturally persist across days until dismissed.
+  (`DaySelector`) lets the user correct either day's entry. A separate
+  History tab (`HealthTabs`) has a Month/Year picker (`MonthYearPicker`)
+  that browses `getLogsForMonth(year, month)` — the fruit-reminder
+  feature was removed entirely (no more reminder days/times in Settings).
 - **Mobile-first**: `AppLayout` renders a bottom tab bar on mobile and a
   sidebar on desktop (`md:` breakpoint switch).
 - **Persistence today, Supabase tomorrow**: all domain hooks

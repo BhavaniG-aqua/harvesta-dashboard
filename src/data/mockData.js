@@ -5,8 +5,6 @@
 
 export const settingsMock = {
   friendName: "Arjun",
-  reminderDays: ["Tuesday", "Thursday"],
-  reminderTimes: ["09:00", "14:00", "20:00"],
   sleepTargetHours: 7,
 };
 
@@ -126,13 +124,8 @@ export const healthDailyLogsMock = [
   { id: "hl-1", date: "2025-09-17", fruits: true, nuts: true, meals: 3, sleepHours: 7.5 },
   { id: "hl-2", date: "2025-09-16", fruits: false, nuts: true, meals: 2, sleepHours: 6.5 },
   { id: "hl-3", date: "2025-09-15", fruits: true, nuts: false, meals: 3, sleepHours: 8 },
-];
-
-export const fruitRemindersMock = [
-  { id: "fr-1", date: "2025-09-16", time: "09:00", done: true },
-  { id: "fr-2", date: "2025-09-16", time: "14:00", done: true },
-  { id: "fr-3", date: "2025-09-16", time: "20:00", done: false },
-  { id: "fr-4", date: "2025-09-17", time: "09:00", done: false },
+  { id: "hl-4", date: "2025-08-30", fruits: true, nuts: true, meals: 3, sleepHours: 7 },
+  { id: "hl-5", date: "2025-08-15", fruits: false, nuts: false, meals: 2, sleepHours: 6 },
 ];
 
 // ---------------------------------------------------------------------------

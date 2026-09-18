@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PageHeader from "../../components/common/PageHeader";
 import SectionTitle from "../../components/common/SectionTitle";
 import Button from "../../components/common/Button";
+import HealthTabs from "../../components/health/HealthTabs";
 import DaySelector from "../../components/health/DaySelector";
 import ToggleCheck from "../../components/health/ToggleCheck";
 import MealCountSelector from "../../components/health/MealCountSelector";
 import SleepInput from "../../components/health/SleepInput";
-import FruitReminderCard from "../../components/health/FruitReminderCard";
-import RecentHistoryList from "../../components/health/RecentHistoryList";
+import MonthYearPicker from "../../components/health/MonthYearPicker";
+import MonthlyHistoryList from "../../components/health/MonthlyHistoryList";
 import { useHealthContext } from "../../services/HealthContext";
 import { todayStr, yesterdayStr } from "../../hooks/useHealthData";
 import { formatShortDate } from "../../utils/date";
@@ -15,23 +16,18 @@ import { formatShortDate } from "../../utils/date";
 const EMPTY_LOG = { fruits: false, nuts: false, meals: 1, sleepHours: 0 };
 
 function HealthPage() {
-  const {
-    logs,
-    getLogForDate,
-    saveLogForDate,
-    pendingReminders,
-    markReminderDone,
-  } = useHealthContext();
+  const { getLogForDate, saveLogForDate, getLogsForMonth } =
+    useHealthContext();
 
+  const [tab, setTab] = useState("today");
+
+  // --- "Today" tab state ---------------------------------------------
   const [selectedDay, setSelectedDay] = useState("today");
   const dateKey = selectedDay === "today" ? todayStr() : yesterdayStr();
 
-  // Staged (unsaved) form state — only written to storage when Save is
-  // pressed, so toggling fruits/nuts/meals/sleep no longer auto-saves.
   const [form, setForm] = useState(() => getLogForDate(dateKey) || EMPTY_LOG);
   const [saved, setSaved] = useState(false);
 
-  // Re-load the staged form whenever the selected day changes.
   useEffect(() => {
     setForm(getLogForDate(dateKey) || EMPTY_LOG);
     setSaved(false);
@@ -49,21 +45,36 @@ function HealthPage() {
     setTimeout(() => setSaved(false), 2000);
   }
 
-  const recentLogs = logs.slice(0, 5);
+  // --- "History" tab state --------------------------------------------
+  const now = new Date();
+  const [historyYear, setHistoryYear] = useState(now.getFullYear());
+  const [historyMonth, setHistoryMonth] = useState(now.getMonth());
+
+  const monthlyLogs = useMemo(
+    () => getLogsForMonth(historyYear, historyMonth),
+    [getLogsForMonth, historyYear, historyMonth]
+  );
+
+  function handleMonthChange(year, month) {
+    setHistoryYear(year);
+    setHistoryMonth(month);
+  }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div>
       <PageHeader title="Health" subtitle="Quick daily habit tracker" />
 
-      <div>
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">
-            {formatShortDate(dateKey)}
-          </p>
-          <DaySelector selected={selectedDay} onChange={setSelectedDay} />
-        </div>
+      <HealthTabs active={tab} onChange={setTab} />
 
+      {tab === "today" ? (
         <div className="flex flex-col gap-3">
+          <div className="mb-1 flex items-center justify-between gap-3">
+            <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">
+              {formatShortDate(dateKey)}
+            </p>
+            <DaySelector selected={selectedDay} onChange={setSelectedDay} />
+          </div>
+
           <div className="flex gap-3">
             <ToggleCheck
               label="Fruits"
@@ -100,20 +111,21 @@ function HealthPage() {
             ) : null}
           </div>
         </div>
-      </div>
-
-      <div>
-        <SectionTitle>Fruit Reminder</SectionTitle>
-        <FruitReminderCard
-          pendingReminders={pendingReminders}
-          onMarkDone={markReminderDone}
-        />
-      </div>
-
-      <div>
-        <SectionTitle>Recent History</SectionTitle>
-        <RecentHistoryList logs={recentLogs} />
-      </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          <MonthYearPicker
+            year={historyYear}
+            month={historyMonth}
+            onChange={handleMonthChange}
+          />
+          <div>
+            <SectionTitle>
+              {monthlyLogs.length} {monthlyLogs.length === 1 ? "entry" : "entries"}
+            </SectionTitle>
+            <MonthlyHistoryList logs={monthlyLogs} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
