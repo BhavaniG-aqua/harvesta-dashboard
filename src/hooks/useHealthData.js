@@ -12,7 +12,12 @@ const DAY_NAMES = [
   "Saturday",
 ];
 
-const todayStr = () => new Date().toISOString().slice(0, 10);
+export const todayStr = () => new Date().toISOString().slice(0, 10);
+export const yesterdayStr = () => {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return d.toISOString().slice(0, 10);
+};
 const todayDayName = () => DAY_NAMES[new Date().getDay()];
 
 // Persisted state hook for Health: daily food/sleep logs + fruit reminders.
@@ -57,27 +62,34 @@ export function useHealthData(settings) {
 
   const todayLog = logs.find((l) => l.date === todayStr()) || null;
 
-  const upsertTodayLog = useCallback(
-    (partial) => {
+  // Returns the log for an arbitrary date key ("YYYY-MM-DD"), or null.
+  const getLogForDate = useCallback(
+    (dateKey) => logs.find((l) => l.date === dateKey) || null,
+    [logs]
+  );
+
+  // Creates or overwrites the log for a given date key. Used by the
+  // explicit Save action on the Health page (Today/Yesterday editable).
+  const saveLogForDate = useCallback(
+    (dateKey, data) => {
       setLogs((prev) => {
-        const date = todayStr();
-        const existingIndex = prev.findIndex((l) => l.date === date);
+        const existingIndex = prev.findIndex((l) => l.date === dateKey);
         if (existingIndex === -1) {
           return [
             {
               id: `hl-${Date.now()}`,
-              date,
+              date: dateKey,
               fruits: false,
               nuts: false,
               meals: 1,
               sleepHours: 0,
-              ...partial,
+              ...data,
             },
             ...prev,
           ];
         }
         const updated = [...prev];
-        updated[existingIndex] = { ...updated[existingIndex], ...partial };
+        updated[existingIndex] = { ...updated[existingIndex], ...data };
         return updated;
       });
     },
@@ -98,7 +110,8 @@ export function useHealthData(settings) {
   return {
     logs,
     todayLog,
-    upsertTodayLog,
+    getLogForDate,
+    saveLogForDate,
     reminders,
     pendingReminders,
     markReminderDone,

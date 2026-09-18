@@ -109,6 +109,11 @@ src/
   Inspiration management lives at `/inspiration` (reachable via a "See
   more" link on the Dashboard and a link on Settings) — kept out of the
   main 6-item bottom nav per the master context's Section 8 spec.
+- **Health edits require an explicit Save**: the Health page stages
+  fruits/nuts/meals/sleep changes in local form state and only writes
+  them via `saveLogForDate` when the Save button is pressed — no more
+  auto-save on every toggle. A Today/Yesterday selector
+  (`DaySelector`) lets the user correct either day's entry.
 - **Settings-driven reminders**: `useHealthData` reads `reminderDays` /
   `reminderTimes` from Settings and auto-generates today's fruit reminders
   if today is a configured day. Reminders stay "pending" until marked
