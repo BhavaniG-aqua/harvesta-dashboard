@@ -33,7 +33,7 @@ npm run preview   # preview production build
 | 3 | Preparation — categories & topics CRUD, rename, status filters | ✅ |
 | 4 | Interview File Manager — nested folders, rename, upload/download, delete | ✅ |
 | 5 | Health — daily log (Today/Yesterday editable, explicit Save) + monthly history browser | ✅ |
-| 6 | Notes — create/edit/delete/download/search, image insert | ✅ |
+| 6 | Notes — create/edit/delete/download/search, image insert, rich text formatting toolbar | ✅ |
 | 7 | Inspiration — manage motivation/funny content, shown on Dashboard | ✅ |
 | 8 | Supabase (Postgres + Storage) integration | ⏳ Not started |
 
@@ -96,6 +96,14 @@ src/
 ## Notes on Implementation
 
 - **No CSE/IT bias**: Preparation categories/topics are fully user-defined.
+- **Notes formatting toolbar (`NoteToolbar`)**: sits directly above the
+  editor and supports Bold, Italic, 4 font sizes, and text color (preset
+  swatches + a native color picker), applied via the browser's built-in
+  `execCommand` (still supported everywhere for these operations, so no
+  extra editor framework dependency was needed). All page-level actions
+  (Insert Image, Attach File, Download, Delete, Save) were moved into a
+  single action bar at the very top of the note editor page, above the
+  title field.
 - **Placements calendar**: `/placements` has a List/Calendar toggle. The
   calendar (`PlacementCalendar`) shows a month grid with a dot on any day
   that has an event; selecting a day shows that day's events below

@@ -5,6 +5,7 @@ import Button from "../../components/common/Button";
 import EmptyState from "../../components/common/EmptyState";
 import FileRow from "../../components/files/FileRow";
 import RichTextEditor from "../../components/notes/RichTextEditor";
+import NoteToolbar from "../../components/notes/NoteToolbar";
 import { useNotesContext } from "../../services/NotesContext";
 import { stripHtml } from "../../utils/html";
 import { getPreviewCategory } from "../../utils/fileTypes";
@@ -13,6 +14,10 @@ import { getPreviewCategory } from "../../utils/fileTypes";
 //
 // - Body text + images live TOGETHER inline in one contentEditable area
 //   (like inserting a picture inside a Word document at the cursor).
+// - A formatting toolbar (bold / italic / size / color) sits directly
+//   above the editor, and all page-level actions (Insert Image, Attach
+//   File, Save, Download, Delete) live in one action bar at the very
+//   top of the page, above everything else.
 // - Separate non-image files (PDFs, docs, etc.) are kept as a distinct
 //   "attachments" list below the body, shown as downloadable rows —
 //   these don't make sense embedded inline in running text.
@@ -31,6 +36,7 @@ function NoteEditorPage() {
   const note = getNote(noteId);
   const [title, setTitle] = useState(note?.title || "");
   const [attachments, setAttachments] = useState(note?.attachments || []);
+  const [saved, setSaved] = useState(false);
 
   if (!note) {
     return (
@@ -47,6 +53,8 @@ function NoteEditorPage() {
 
   function handleSave() {
     updateNote(noteId, { title, content: currentHtml(), attachments });
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   }
 
   function handleDelete() {
@@ -135,38 +143,8 @@ function NoteEditorPage() {
     <div>
       <BackLink to="/notes" label="Back to Notes" />
 
-      <div className="mb-3">
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Note title"
-          className="w-full border-b border-slate-200 pb-2 text-lg font-semibold text-slate-900 outline-none focus:border-brand-400"
-        />
-      </div>
-
-      <RichTextEditor
-        editorRef={editorRef}
-        initialHtml={note.content}
-        placeholder="Start writing... insert images anywhere with 🖼️ Insert Image"
-      />
-
-      {attachments.length > 0 ? (
-        <div className="mt-3 flex flex-col gap-2">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
-            Attached Files
-          </p>
-          {attachments.map((file) => (
-            <FileRow
-              key={file.id}
-              file={file}
-              onDelete={handleDeleteAttachment}
-              onSaveText={handleSaveAttachmentText}
-            />
-          ))}
-        </div>
-      ) : null}
-
-      <div className="mt-4 flex flex-wrap gap-2">
+      {/* All page-level actions live together at the top. */}
+      <div className="mb-4 flex flex-wrap items-center gap-2">
         <input
           ref={imageInputRef}
           type="file"
@@ -189,14 +167,56 @@ function NoteEditorPage() {
           📎 Attach File
         </Button>
 
-        <Button onClick={handleSave}>💾 Save</Button>
         <Button variant="secondary" onClick={handleDownloadNote}>
-          ⬇️ Download Note
+          ⬇️ Download
         </Button>
+
         <Button variant="danger" onClick={handleDelete}>
           🗑️ Delete
         </Button>
+
+        <div className="flex-1" />
+
+        <Button onClick={handleSave}>💾 Save</Button>
+        {saved ? (
+          <span className="text-xs font-medium text-success-600">Saved ✓</span>
+        ) : null}
       </div>
+
+      <div className="mb-3">
+        <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Note title"
+          className="w-full border-b border-slate-200 pb-2 text-lg font-semibold text-slate-900 outline-none focus:border-brand-400"
+        />
+      </div>
+
+      <div className="mb-3">
+        <NoteToolbar editorRef={editorRef} />
+      </div>
+
+      <RichTextEditor
+        editorRef={editorRef}
+        initialHtml={note.content}
+        placeholder="Start writing..."
+      />
+
+      {attachments.length > 0 ? (
+        <div className="mt-3 flex flex-col gap-2">
+          <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+            Attached Files
+          </p>
+          {attachments.map((file) => (
+            <FileRow
+              key={file.id}
+              file={file}
+              onDelete={handleDeleteAttachment}
+              onSaveText={handleSaveAttachmentText}
+            />
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }
