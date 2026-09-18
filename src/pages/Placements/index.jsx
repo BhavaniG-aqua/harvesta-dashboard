@@ -6,7 +6,7 @@ import PlacementCard from "../../components/placements/PlacementCard";
 import PlacementCalendar from "../../components/placements/PlacementCalendar";
 import SelectedDayEvents from "../../components/placements/SelectedDayEvents";
 import ViewToggle from "../../components/placements/ViewToggle";
-import NotificationPermissionBanner from "../../components/placements/NotificationPermissionBanner";
+import NotificationPermissionBanner from "../../components/common/NotificationPermissionBanner";
 import EmptyState from "../../components/common/EmptyState";
 import { usePlacementsContext } from "../../services/PlacementsContext";
 import { useEventReminders } from "../../hooks/useEventReminders";
@@ -61,6 +61,7 @@ function PlacementsListPage() {
       <NotificationPermissionBanner
         permission={permission}
         onRequest={requestPermission}
+        description="Get a silent notification 1 day and 1 hour before each placement event (only while this tab is open)."
       />
 
       {view === "calendar" ? (

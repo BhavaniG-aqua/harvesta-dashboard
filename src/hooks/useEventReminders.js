@@ -1,5 +1,6 @@
-import { useEffect, useCallback, useState } from "react";
+import { useEffect } from "react";
 import { useLocalStorageState } from "./useLocalStorageState";
+import { useNotificationPermission } from "./useNotificationPermission";
 import { getEventDateTime } from "../utils/eventTime";
 
 const CHECK_INTERVAL_MS = 60 * 1000; // check once a minute
@@ -18,19 +19,11 @@ const HOUR_MS = 60 * 60 * 1000;
 // the simplest option that still satisfies "just a notification, not an
 // alarm" without server-side infrastructure or paid push services.
 export function useEventReminders(events) {
-  const [permission, setPermission] = useState(
-    typeof Notification !== "undefined" ? Notification.permission : "unsupported"
-  );
+  const { permission, requestPermission } = useNotificationPermission();
   const [firedReminders, setFiredReminders] = useLocalStorageState(
     "dashboard.firedEventReminders",
     []
   );
-
-  const requestPermission = useCallback(async () => {
-    if (typeof Notification === "undefined") return;
-    const result = await Notification.requestPermission();
-    setPermission(result);
-  }, []);
 
   useEffect(() => {
     if (typeof Notification === "undefined") return;

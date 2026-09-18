@@ -121,6 +121,10 @@ src/
   `reminderTimes` from Settings and auto-generates today's fruit reminders
   if today is a configured day. Reminders stay "pending" until marked
   DONE, so they naturally persist across days until dismissed.
+  `useFruitReminderNotifications` fires a silent browser Notification at
+  the moment each pending reminder's scheduled time arrives (same
+  mechanism and same shared `useNotificationPermission` hook as the
+  Placements event reminders below) — also in-tab only.
 - **Mobile-first**: `AppLayout` renders a bottom tab bar on mobile and a
   sidebar on desktop (`md:` breakpoint switch).
 - **Persistence today, Supabase tomorrow**: all domain hooks
