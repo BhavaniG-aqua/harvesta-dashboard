@@ -1,11 +1,15 @@
 import { useState } from "react";
-import Card from "../common/Card";
-import StatusPill from "../common/StatusPill";
+import ConfirmButton from "../common/ConfirmButton";
 
-const STATUS_OPTIONS = ["NEW", "COMPLETED", "REVISE"];
+const STATUS_OPTIONS = [
+  { key: "NEW", label: "New", dot: "bg-slate-400" },
+  { key: "COMPLETED", label: "Done", dot: "bg-emerald-500" },
+  { key: "REVISE", label: "Revise", dot: "bg-amber-500" },
+];
 
-// A single preparation topic row with inline status switcher and
-// inline rename support (click the name to edit it).
+// A single preparation topic row: name on the left, status toggle
+// buttons on the right, all on ONE line (topic — space — status
+// buttons), with inline rename (click the name) and delete.
 function TopicItem({ topic, onStatusChange, onDelete, onRename }) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(topic.name);
@@ -21,66 +25,69 @@ function TopicItem({ topic, onStatusChange, onDelete, onRename }) {
   }
 
   return (
-    <Card className="flex flex-col gap-3 bg-white dark:bg-slate-800">
-      <div className="flex items-start justify-between gap-2">
-        {editing ? (
-          <input
-            autoFocus
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            onBlur={commitRename}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") commitRename();
-              if (e.key === "Escape") {
-                setName(topic.name);
-                setEditing(false);
-              }
-            }}
-            className="w-full rounded-lg border border-brand-300 bg-white px-2 py-1 text-sm text-slate-900 outline-none dark:bg-slate-900 dark:text-slate-100"
-          />
-        ) : (
-          <button
-            type="button"
-            onClick={() => setEditing(true)}
-            className="text-left text-sm font-medium text-slate-800 dark:text-slate-100"
-          >
-            {topic.name}
-          </button>
-        )}
-        <StatusPill status={topic.status} />
-      </div>
+    <div className="flex items-center gap-2 rounded-xl border border-slate-200/70 bg-white px-3 py-2 shadow-sm shadow-slate-200/40 dark:border-slate-700/70 dark:bg-slate-800">
+      {editing ? (
+        <input
+          autoFocus
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onBlur={commitRename}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") commitRename();
+            if (e.key === "Escape") {
+              setName(topic.name);
+              setEditing(false);
+            }
+          }}
+          className="min-w-0 flex-1 rounded-lg border border-brand-300 bg-white px-2 py-1 text-sm text-slate-900 outline-none dark:bg-slate-900 dark:text-slate-100"
+        />
+      ) : (
+        <button
+          type="button"
+          onClick={() => setEditing(true)}
+          className="min-w-0 flex-1 truncate text-left text-sm font-medium text-slate-800 dark:text-slate-100"
+          title={topic.name}
+        >
+          {topic.name}
+        </button>
+      )}
 
-      <div className="flex gap-2">
-        {STATUS_OPTIONS.map((status) => {
-          const isActive = topic.status === status;
+      <div className="flex shrink-0 items-center gap-1">
+        {STATUS_OPTIONS.map((opt) => {
+          const isActive = topic.status === opt.key;
           return (
             <button
-              key={status}
+              key={opt.key}
               type="button"
-              onClick={() => onStatusChange(topic.id, status)}
+              onClick={() => onStatusChange(topic.id, opt.key)}
+              title={opt.label}
               className={[
-                "flex-1 rounded-lg py-1.5 text-xs font-medium transition-colors",
+                "flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-medium transition-colors",
                 isActive
                   ? "bg-brand-600 text-white"
                   : "bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600",
               ].join(" ")}
             >
-              {status}
+              <span
+                className={[
+                  "h-1.5 w-1.5 rounded-full",
+                  isActive ? "bg-white" : opt.dot,
+                ].join(" ")}
+              />
+              <span className="hidden sm:inline">{opt.label}</span>
             </button>
           );
         })}
         {onDelete ? (
-          <button
-            type="button"
-            onClick={() => onDelete(topic.id)}
-            className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-500 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
-            aria-label="Delete topic"
-          >
-            🗑️
-          </button>
+          <ConfirmButton
+            label="🗑️"
+            confirmLabel="Delete?"
+            onConfirm={() => onDelete(topic.id)}
+            className="!px-2 !py-1"
+          />
         ) : null}
       </div>
-    </Card>
+    </div>
   );
 }
 

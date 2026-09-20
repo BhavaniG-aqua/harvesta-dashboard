@@ -61,7 +61,14 @@ body {
   scrollbar-width: none;
 }
 
-/* Word-style note editor: placeholder text + inline image sizing */
+/* Word-style note editor: placeholder text + inline image sizing.
+   Explicit `font-weight: 400` guards against any inherited bold from a
+   parent/browser default — text should only ever render bold because of
+   an actual <b>/<strong> tag the user created via Ctrl+B or the toolbar
+   button, never as a baseline default the moment you start typing. */
+.note-editor {
+  font-weight: 400;
+}
 .note-editor:empty::before {
   content: attr(data-placeholder);
   color: #94a3b8;
@@ -75,6 +82,27 @@ body {
 }
 .note-editor p {
   margin: 0 0 0.5rem 0;
+}
+.note-editor b,
+.note-editor strong {
+  font-weight: 700;
+}
+
+/* Rich text fields (Placement form: Requirements, Selection Process,
+   etc.) — same placeholder behavior as the note editor, on a much
+   smaller contentEditable field that only supports Bold. Same explicit
+   normal-weight baseline as .note-editor above. */
+.rich-field {
+  font-weight: 400;
+}
+.rich-field:empty::before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+  pointer-events: none;
+}
+.rich-field b,
+.rich-field strong {
+  font-weight: 700;
 }
 
 /* Subtle card hover lift, used across clickable cards site-wide */

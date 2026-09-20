@@ -7,8 +7,8 @@ import FileRow from "../../components/files/FileRow";
 import InlineAddForm from "../../components/common/InlineAddForm";
 import EmptyState from "../../components/common/EmptyState";
 import Button from "../../components/common/Button";
+import ConfirmButton from "../../components/common/ConfirmButton";
 import { useInterviewFilesContext } from "../../services/InterviewFilesContext";
-import { getPreviewCategory } from "../../utils/fileTypes";
 
 function InterviewFolderDetailPage() {
   const { folderId } = useParams();
@@ -44,17 +44,11 @@ function InterviewFolderDetailPage() {
     );
   }
 
-  function handleFileSelected(e) {
+  async function handleFileSelected(e) {
     const file = e.target.files?.[0];
-    if (!file) return;
-    const type = getPreviewCategory(file.name);
-    addFile(folderId, {
-      name: file.name,
-      type,
-      size: `${Math.max(1, Math.round(file.size / 1024))} KB`,
-      url: URL.createObjectURL(file),
-    });
     e.target.value = "";
+    if (!file) return;
+    await addFile(folderId, file);
   }
 
   function handleDeleteFolder() {
@@ -100,13 +94,11 @@ function InterviewFolderDetailPage() {
             {folder.name} <span className="text-xs text-slate-400 dark:text-slate-500">✏️</span>
           </h1>
         )}
-        <button
-          type="button"
-          onClick={handleDeleteFolder}
-          className="text-xs font-medium text-red-500 hover:underline dark:text-red-400"
-        >
-          Delete folder
-        </button>
+        <ConfirmButton
+          label="Delete Folder"
+          confirmLabel="Delete this folder and everything inside it?"
+          onConfirm={handleDeleteFolder}
+        />
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2">
@@ -118,7 +110,7 @@ function InterviewFolderDetailPage() {
         <input
           ref={fileInputRef}
           type="file"
-          accept=".txt,.py,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.png,.jpg,.jpeg,.svg"
+          accept=".txt,.py,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.png,.jpg,.jpeg,.gif,.webp,.svg"
           className="hidden"
           onChange={handleFileSelected}
         />

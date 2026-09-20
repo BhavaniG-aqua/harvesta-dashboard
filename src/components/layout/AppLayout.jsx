@@ -1,12 +1,28 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import Sidebar from "../navigation/Sidebar";
 import BottomNav from "../navigation/BottomNav";
 import ThemeToggle from "../common/ThemeToggle";
+import { useFavicon } from "../../hooks/useFavicon";
+import { useLettersContext } from "../../services/LettersContext";
 
 // Root application shell: sidebar on desktop, bottom nav on mobile,
 // and a scrollable content area in between. A theme toggle sits at the
 // top of the content on mobile (Sidebar carries its own on desktop).
 function AppLayout() {
+  const { lock } = useLettersContext();
+  const location = useLocation();
+  useFavicon();
+
+  // Letters auto-locks the instant you navigate away from it — there is
+  // no manual "Lock" button anymore, this is the only way it locks
+  // (besides a full page reload).
+  useEffect(() => {
+    if (!location.pathname.startsWith("/letters")) {
+      lock();
+    }
+  }, [location.pathname, lock]);
+
   return (
     <div className="flex min-h-screen bg-transparent text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <Sidebar />

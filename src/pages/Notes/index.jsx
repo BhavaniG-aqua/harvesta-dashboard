@@ -22,9 +22,9 @@ function NotesListPage() {
     );
   }, [notes, search]);
 
-  function handleCreate() {
-    const id = createNote();
-    navigate(`/notes/${id}`);
+  async function handleCreate() {
+    const id = await createNote();
+    if (id) navigate(`/notes/${id}`);
   }
 
   return (

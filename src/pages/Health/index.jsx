@@ -9,6 +9,7 @@ import MealCountSelector from "../../components/health/MealCountSelector";
 import SleepInput from "../../components/health/SleepInput";
 import MonthYearPicker from "../../components/health/MonthYearPicker";
 import MonthlyHistoryList from "../../components/health/MonthlyHistoryList";
+import HealthSummaryCard from "../../components/dashboard/HealthSummaryCard";
 import { useHealthContext } from "../../services/HealthContext";
 import { todayStr, yesterdayStr } from "../../hooks/useHealthData";
 import { formatShortDate } from "../../utils/date";
@@ -16,7 +17,7 @@ import { formatShortDate } from "../../utils/date";
 const EMPTY_LOG = { fruits: false, nuts: false, meals: 1, sleepHours: 0 };
 
 function HealthPage() {
-  const { getLogForDate, saveLogForDate, getLogsForMonth } =
+  const { getLogForDate, saveLogForDate, getLogsForMonth, getMonthSummary } =
     useHealthContext();
 
   const [tab, setTab] = useState("today");
@@ -53,6 +54,11 @@ function HealthPage() {
   const monthlyLogs = useMemo(
     () => getLogsForMonth(historyYear, historyMonth),
     [getLogsForMonth, historyYear, historyMonth]
+  );
+
+  const monthSummary = useMemo(
+    () => getMonthSummary(historyYear, historyMonth),
+    [getMonthSummary, historyYear, historyMonth]
   );
 
   function handleMonthChange(year, month) {
@@ -102,7 +108,7 @@ function HealthPage() {
 
           <div className="flex items-center gap-3">
             <Button onClick={handleSave} className="self-start">
-              💾 Save
+              ✨ Save
             </Button>
             {saved ? (
               <span className="text-xs font-medium text-success-600">
@@ -118,6 +124,10 @@ function HealthPage() {
             month={historyMonth}
             onChange={handleMonthChange}
           />
+          <div>
+            <SectionTitle>Month Summary</SectionTitle>
+            <HealthSummaryCard summary={monthSummary} monthIndex={historyMonth} />
+          </div>
           <div>
             <SectionTitle>
               {monthlyLogs.length} {monthlyLogs.length === 1 ? "entry" : "entries"}

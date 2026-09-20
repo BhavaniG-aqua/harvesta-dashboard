@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BackLink from "../../components/common/BackLink";
 import Button from "../../components/common/Button";
+import ConfirmButton from "../../components/common/ConfirmButton";
 import EmptyState from "../../components/common/EmptyState";
 import FileRow from "../../components/files/FileRow";
 import RichTextEditor from "../../components/notes/RichTextEditor";
@@ -9,6 +10,7 @@ import NoteToolbar from "../../components/notes/NoteToolbar";
 import { useNotesContext } from "../../services/NotesContext";
 import { stripHtml } from "../../utils/html";
 import { getPreviewCategory } from "../../utils/fileTypes";
+import { uploadToStorage, buildStoragePath } from "../../utils/supabaseStorage";
 
 // Word-style notepad editor for a single note.
 //
@@ -75,12 +77,16 @@ function NoteEditorPage() {
 
   // Inserts the picked image directly at the current cursor position
   // inside the editor, exactly like Word's "Insert > Picture".
-  function handleInsertImage(e) {
+  async function handleInsertImage(e) {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file || !editorRef.current) return;
 
-    const url = URL.createObjectURL(file);
+    const url = await uploadToStorage(
+      "note-attachments",
+      buildStoragePath(title || "note", file.name),
+      file
+    );
     const img = document.createElement("img");
     img.src = url;
     img.alt = file.name;
@@ -105,27 +111,36 @@ function NoteEditorPage() {
     selection?.addRange(range);
   }
 
-  function handleAttachFile(e) {
+  async function handleAttachFile(e) {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
 
+    const url = await uploadToStorage(
+      "note-attachments",
+      buildStoragePath(title || "note", file.name),
+      file
+    );
     setAttachments((prev) => [
       ...prev,
       {
-        id: `att-${Date.now()}`,
+        id: crypto.randomUUID(),
         name: file.name,
         type: getPreviewCategory(file.name),
         size: `${Math.max(1, Math.round(file.size / 1024))} KB`,
-        url: URL.createObjectURL(file),
+        url,
         createdAt: new Date().toISOString().slice(0, 10),
       },
     ]);
   }
 
-  function handleSaveAttachmentText(file, newText) {
+  async function handleSaveAttachmentText(file, newText) {
     const blob = new Blob([newText], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
+    const url = await uploadToStorage(
+      "note-attachments",
+      buildStoragePath(title || "note", file.name),
+      blob
+    );
     setAttachments((prev) =>
       prev.map((a) =>
         a.id === file.id
@@ -159,7 +174,7 @@ function NoteEditorPage() {
         <input
           ref={fileInputRef}
           type="file"
-          accept=".txt,.py,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.svg"
+          accept=".txt,.py,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf,.png,.jpg,.jpeg,.gif,.webp,.svg"
           className="hidden"
           onChange={handleAttachFile}
         />
@@ -171,12 +186,15 @@ function NoteEditorPage() {
           ⬇️ Download
         </Button>
 
-        <Button variant="danger" className="shrink-0" onClick={handleDelete}>
-          🗑️ Delete
-        </Button>
+        <ConfirmButton
+          label="🗑️ Delete"
+          confirmLabel="Delete this note?"
+          onConfirm={handleDelete}
+          className="shrink-0"
+        />
 
         <Button className="ml-auto shrink-0" onClick={handleSave}>
-          💾 Save
+          ✨ Save
         </Button>
         {saved ? (
           <span className="shrink-0 text-xs font-medium text-success-600">Saved ✓</span>

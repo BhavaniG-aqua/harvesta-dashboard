@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BackLink from "../../components/common/BackLink";
 import FormField from "../../components/common/FormField";
+import RichTextField from "../../components/common/RichTextField";
 import Button from "../../components/common/Button";
 import { usePlacementsContext } from "../../services/PlacementsContext";
 
@@ -32,16 +33,16 @@ function PlacementFormPage() {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!form.company.trim() || !form.date) return;
 
     if (isEditing) {
-      updateEvent(eventId, form);
+      await updateEvent(eventId, form);
       navigate(`/placements/${eventId}`);
     } else {
-      const id = addEvent(form);
-      navigate(`/placements/${id}`);
+      await addEvent(form);
+      navigate("/placements");
     }
   }
 
@@ -91,37 +92,33 @@ function PlacementFormPage() {
           onChange={(e) => setField("package", e.target.value)}
           placeholder="e.g. 16 LPA"
         />
-        <FormField
+        <RichTextField
           label="Requirements"
-          as="textarea"
-          rows={2}
           value={form.requirements}
-          onChange={(e) => setField("requirements", e.target.value)}
+          onChange={(html) => setField("requirements", html)}
+          placeholder="e.g. EEE/EE, CGPA > 7.5"
         />
-        <FormField
+        <RichTextField
           label="Selection Process"
-          as="textarea"
-          rows={2}
           value={form.selectionProcess}
-          onChange={(e) => setField("selectionProcess", e.target.value)}
+          onChange={(html) => setField("selectionProcess", html)}
+          placeholder="e.g. Online Test -> GD -> Technical Interview -> HR"
         />
-        <FormField
+        <RichTextField
           label="What to Prepare"
-          as="textarea"
-          rows={2}
           value={form.whatToPrepare}
-          onChange={(e) => setField("whatToPrepare", e.target.value)}
+          onChange={(html) => setField("whatToPrepare", html)}
+          placeholder="e.g. Power Systems, Electrical Machines"
         />
-        <FormField
+        <RichTextField
           label="Additional Notes"
-          as="textarea"
-          rows={2}
           value={form.notes}
-          onChange={(e) => setField("notes", e.target.value)}
+          onChange={(html) => setField("notes", html)}
+          placeholder="Anything else worth remembering"
         />
 
         <Button type="submit" className="mt-2 self-start">
-          {isEditing ? "💾 Save Changes" : "+ Add Event"}
+          {isEditing ? "✨ Save Changes" : "+ Add Event"}
         </Button>
       </form>
     </div>

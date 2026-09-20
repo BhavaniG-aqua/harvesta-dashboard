@@ -2,10 +2,13 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 // A folder tile inside the file manager grid. Supports inline rename
-// (double-click or the small "rename" affordance) and delete.
+// (double-click or the small "rename" affordance) and delete — delete
+// always asks for confirmation first (tap once to arm it, tap "Confirm"
+// to actually delete, or tap elsewhere / wait to cancel).
 function FolderCard({ folder, onDelete, onRename }) {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(folder.name);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   function commitRename() {
     const trimmed = name.trim();
@@ -39,6 +42,36 @@ function FolderCard({ folder, onDelete, onRename }) {
     );
   }
 
+  if (confirmingDelete) {
+    return (
+      <div className="flex flex-col items-center gap-2 rounded-2xl border border-red-200 bg-red-50/60 p-4 text-center dark:border-red-900/40 dark:bg-red-900/10">
+        <span className="text-2xl">🗑️</span>
+        <p className="text-[11px] font-medium text-slate-600 dark:text-slate-300">
+          Delete "{folder.name}"?
+        </p>
+        <div className="flex gap-1.5">
+          <button
+            type="button"
+            onClick={() => {
+              onDelete(folder.id);
+              setConfirmingDelete(false);
+            }}
+            className="rounded-lg bg-red-500 px-2 py-1 text-[11px] font-medium text-white hover:bg-red-600"
+          >
+            Delete
+          </button>
+          <button
+            type="button"
+            onClick={() => setConfirmingDelete(false)}
+            className="rounded-lg bg-white px-2 py-1 text-[11px] font-medium text-slate-500 ring-1 ring-slate-200 hover:bg-slate-50 dark:bg-slate-700 dark:text-slate-300 dark:ring-slate-600"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="group relative">
       <Link
@@ -64,7 +97,7 @@ function FolderCard({ folder, onDelete, onRename }) {
         {onDelete ? (
           <button
             type="button"
-            onClick={() => onDelete(folder.id)}
+            onClick={() => setConfirmingDelete(true)}
             className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs text-red-500 shadow ring-1 ring-slate-200 dark:bg-slate-700 dark:ring-slate-600"
             aria-label="Delete folder"
           >

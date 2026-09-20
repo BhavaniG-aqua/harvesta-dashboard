@@ -81,12 +81,12 @@ function usePreviewContent(file) {
   return state;
 }
 
-function SheetTable({ sheets }) {
+function SheetTable({ sheets, fullHeight }) {
   const [activeSheet, setActiveSheet] = useState(0);
   const sheet = sheets[activeSheet];
 
   return (
-    <div>
+    <div className={fullHeight ? "flex h-full flex-col" : ""}>
       {sheets.length > 1 ? (
         <div className="no-scrollbar mb-2 flex gap-1 overflow-x-auto border-b border-slate-200 pb-2 dark:border-slate-700">
           {sheets.map((s, i) => (
@@ -106,7 +106,12 @@ function SheetTable({ sheets }) {
           ))}
         </div>
       ) : null}
-      <div className="overflow-auto rounded-xl border border-slate-200 dark:border-slate-700">
+      <div
+        className={[
+          "overflow-auto rounded-xl border border-slate-200 dark:border-slate-700",
+          fullHeight ? "flex-1" : "",
+        ].join(" ")}
+      >
         <table className="min-w-full text-left text-xs">
           <tbody>
             {sheet.rows.map((row, i) => (
@@ -128,9 +133,14 @@ function SheetTable({ sheets }) {
   );
 }
 
-function FileViewerBody({ file }) {
+// `fullScreen`: when true, the preview fills the available height of its
+// parent (used by the full-screen FileViewerModal) instead of capping
+// itself at a small `max-h-[70vh]` box like it did as a centered dialog.
+function FileViewerBody({ file, fullScreen = false }) {
   const category = getPreviewCategory(file.name);
   const { loading, error, data } = usePreviewContent(file);
+
+  const boxHeight = fullScreen ? "h-full" : "max-h-[70vh]";
 
   if (loading) {
     return (
@@ -151,11 +161,16 @@ function FileViewerBody({ file }) {
 
   if (category === "image") {
     return (
-      <img
-        src={data}
-        alt={file.name}
-        className="mx-auto max-h-[70vh] w-auto max-w-full rounded-xl object-contain"
-      />
+      <div className={fullScreen ? "flex h-full items-center justify-center" : ""}>
+        <img
+          src={data}
+          alt={file.name}
+          className={[
+            "mx-auto w-auto max-w-full rounded-xl object-contain",
+            fullScreen ? "max-h-full" : "max-h-[70vh]",
+          ].join(" ")}
+        />
+      </div>
     );
   }
 
@@ -164,14 +179,19 @@ function FileViewerBody({ file }) {
       <iframe
         title={file.name}
         src={data}
-        className="h-[70vh] w-full rounded-xl border border-slate-200 dark:border-slate-700"
+        className={[boxHeight, "w-full rounded-xl border border-slate-200 dark:border-slate-700"].join(" ")}
       />
     );
   }
 
   if (category === "text") {
     return (
-      <pre className="max-h-[70vh] overflow-auto whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-xs text-slate-700 dark:bg-slate-900 dark:text-slate-200">
+      <pre
+        className={[
+          boxHeight,
+          "overflow-auto whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-xs text-slate-700 dark:bg-slate-900 dark:text-slate-200",
+        ].join(" ")}
+      >
         {data}
       </pre>
     );
@@ -180,7 +200,10 @@ function FileViewerBody({ file }) {
   if (category === "word") {
     return (
       <div
-        className="doc-preview max-h-[70vh] max-w-none overflow-auto rounded-xl border border-slate-200 p-4 text-sm text-slate-700 dark:border-slate-700 dark:text-slate-200"
+        className={[
+          boxHeight,
+          "doc-preview max-w-none overflow-auto rounded-xl border border-slate-200 p-4 text-sm text-slate-700 dark:border-slate-700 dark:text-slate-200",
+        ].join(" ")}
         dangerouslySetInnerHTML={{ __html: data }}
       />
     );
@@ -188,8 +211,8 @@ function FileViewerBody({ file }) {
 
   if (category === "sheet") {
     return (
-      <div className="max-h-[70vh] overflow-auto">
-        <SheetTable sheets={data} />
+      <div className={fullScreen ? "h-full" : `${boxHeight} overflow-auto`}>
+        <SheetTable sheets={data} fullHeight={fullScreen} />
       </div>
     );
   }

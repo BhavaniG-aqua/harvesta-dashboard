@@ -3,11 +3,13 @@ import { getFileIcon } from "../../utils/fileTypes";
 import FileViewerModal from "./FileViewerModal";
 
 // A single file row inside the file manager list. Clicking the row opens
-// a preview/edit modal supporting images, PDFs, text/code, Word docs,
-// and spreadsheets — everything else falls back to a clear "download to
-// open" message inside the modal.
+// a full-screen preview/edit view supporting images, PDFs, text/code,
+// Word docs, and spreadsheets — everything else falls back to a clear
+// "download to open" message. Deleting always asks for confirmation
+// first.
 function FileRow({ file, onDelete, onSaveText }) {
   const [viewerOpen, setViewerOpen] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const icon = getFileIcon(file.name);
   const canOpen = Boolean(file.url);
 
@@ -18,6 +20,35 @@ function FileRow({ file, onDelete, onSaveText }) {
     a.href = file.url;
     a.download = file.name;
     a.click();
+  }
+
+  if (confirmingDelete) {
+    return (
+      <div className="flex w-full items-center justify-between rounded-2xl border border-red-200 bg-red-50/60 p-3 dark:border-red-900/40 dark:bg-red-900/10">
+        <p className="truncate text-sm text-slate-700 dark:text-slate-200">
+          Delete "{file.name}"?
+        </p>
+        <div className="flex shrink-0 gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              onDelete(file.id);
+              setConfirmingDelete(false);
+            }}
+            className="rounded-lg bg-red-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-600"
+          >
+            Delete
+          </button>
+          <button
+            type="button"
+            onClick={() => setConfirmingDelete(false)}
+            className="rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-slate-500 ring-1 ring-slate-200 hover:bg-slate-50 dark:bg-slate-700 dark:text-slate-300 dark:ring-slate-600"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -66,7 +97,7 @@ function FileRow({ file, onDelete, onSaveText }) {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                onDelete(file.id);
+                setConfirmingDelete(true);
               }}
               className="rounded-lg px-2 py-1.5 text-sm text-accent-500 hover:bg-accent-100"
               title="Delete"

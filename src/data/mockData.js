@@ -6,6 +6,13 @@
 export const settingsMock = {
   friendName: "Arjun",
   sleepTargetHours: 7,
+  // No default photo — the Sidebar/Settings avatar falls back to a
+  // plain emoji placeholder until the user uploads their own photo.
+  profilePhoto: null,
+  birthday: "", // "YYYY-MM-DD"
+  bio: "",
+  currentGoal: "",
+  permanentReminder: "",
 };
 
 // ---------------------------------------------------------------------------
@@ -51,23 +58,35 @@ export const placementEventsMock = [
 ];
 
 // ---------------------------------------------------------------------------
-// Preparation — Categories & Topics
+// Preparation — Categories, Companies & Topics
+//
+// A topic belongs to exactly ONE category (hierarchy: Category -> Topics)
+// but can be tagged with MANY companies (hierarchy: Company -> Topics),
+// so the same topic can surface under several company sections. "Others"
+// is the fixed fallback category used whenever a topic is added without
+// picking/typing a category.
 // ---------------------------------------------------------------------------
 export const preparationCategoriesMock = [
   { id: "cat-1", name: "Electrical Machines" },
   { id: "cat-2", name: "Power Systems" },
   { id: "cat-3", name: "Control Systems" },
   { id: "cat-4", name: "Power Electronics" },
+  { id: "cat-others", name: "Others" },
+];
+
+export const preparationCompaniesMock = [
+  { id: "comp-1", name: "Siemens" },
+  { id: "comp-2", name: "Tata Power" },
 ];
 
 export const preparationTopicsMock = [
-  { id: "top-1", categoryId: "cat-1", name: "Power Transformer", status: "REVISE" },
-  { id: "top-2", categoryId: "cat-1", name: "Induction Motor", status: "COMPLETED" },
-  { id: "top-3", categoryId: "cat-1", name: "Synchronous Machines", status: "NEW" },
-  { id: "top-4", categoryId: "cat-2", name: "Load Flow Analysis", status: "NEW" },
-  { id: "top-5", categoryId: "cat-2", name: "Fault Analysis", status: "REVISE" },
-  { id: "top-6", categoryId: "cat-3", name: "Root Locus", status: "COMPLETED" },
-  { id: "top-7", categoryId: "cat-4", name: "Buck-Boost Converter", status: "NEW" },
+  { id: "top-1", categoryId: "cat-1", name: "Power Transformer", status: "REVISE", companyIds: ["comp-1"] },
+  { id: "top-2", categoryId: "cat-1", name: "Induction Motor", status: "COMPLETED", companyIds: [] },
+  { id: "top-3", categoryId: "cat-1", name: "Synchronous Machines", status: "NEW", companyIds: ["comp-1", "comp-2"] },
+  { id: "top-4", categoryId: "cat-2", name: "Load Flow Analysis", status: "NEW", companyIds: ["comp-2"] },
+  { id: "top-5", categoryId: "cat-2", name: "Fault Analysis", status: "REVISE", companyIds: [] },
+  { id: "top-6", categoryId: "cat-3", name: "Root Locus", status: "COMPLETED", companyIds: [] },
+  { id: "top-7", categoryId: "cat-4", name: "Buck-Boost Converter", status: "NEW", companyIds: ["comp-1"] },
 ];
 
 // ---------------------------------------------------------------------------
@@ -94,8 +113,18 @@ export const interviewFilesMock = [
 ];
 
 // ---------------------------------------------------------------------------
-// Notes
+// Letters — a private, day-wise personal journal/letter feed, gated
+// behind its own 6-digit passcode (separate from the rest of the app,
+// which intentionally has no authentication — see Master Context §5).
+// Each entry is one letter for one calendar day.
 // ---------------------------------------------------------------------------
+export const lettersMock = [];
+
+// The passcode itself is a plain 6-digit string stored client-side only
+// (this is a lightweight personal-use gate, not real security).
+export const lettersPasscodeMock = null;
+
+
 // `attachments` holds BOTH inline images and general file attachments
 // (pdf, doc, etc.) for a note — mirrors the Interview Files shape
 // ({ id, name, type, size, url, createdAt }) so the same FileRow-style
@@ -134,28 +163,44 @@ export const healthDailyLogsMock = [
 // "motivation" or "inspiration" in the UI. This content is curated by
 // hand (added here during development today; will live in a Supabase
 // table in Phase 8) — there is intentionally no in-app add/upload UI.
+//
+// `oneMoreThingRotationMock` holds the day-by-day feed: it must alternate
+// strictly between a quote and an image so only ONE thing is ever shown
+// per day, never a list. `oneMoreThingFixedItemMock` is a single image
+// that is always shown as-is, every day, unchanged — separate from the
+// rotation.
 // ---------------------------------------------------------------------------
-export const oneMoreThingContentMock = [
+export const oneMoreThingRotationMock = [
   {
     id: "insp-1",
-    type: "motivation",
+    type: "quote",
     quote: "Success is the sum of small efforts, repeated day in and day out.",
     author: "Robert Collier",
   },
   {
     id: "insp-2",
-    type: "motivation",
+    type: "image",
+    imageUrl: "",
+    caption: "",
+  },
+  {
+    id: "insp-3",
+    type: "quote",
     quote: "It always seems impossible until it's done.",
     author: "Nelson Mandela",
   },
   {
-    id: "insp-3",
-    type: "funny",
-    text: "Engineers don't fail, they just find 10,000 ways that don't work.",
-  },
-  {
     id: "insp-4",
-    type: "funny",
-    text: "My code doesn't work, I have no idea why. My code works, I have no idea why.",
+    type: "image",
+    imageUrl: "",
+    caption: "",
   },
 ];
+
+export const oneMoreThingFixedItemMock = {
+  id: "insp-fixed-1",
+  type: "image",
+  imageUrl: "",
+  caption: "",
+};
+

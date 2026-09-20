@@ -5,7 +5,8 @@ const VARIANT_STYLES = {
   secondary:
     "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700 dark:hover:bg-slate-700",
   ghost: "bg-transparent text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800",
-  danger: "bg-accent-100 text-accent-600 hover:bg-accent-100/80 dark:bg-accent-600/20 dark:text-accent-400 dark:hover:bg-accent-600/30",
+  danger:
+    "bg-slate-100 text-red-500 hover:bg-red-50 hover:text-red-600 dark:bg-slate-700/70 dark:text-red-400 dark:hover:bg-red-900/30 dark:hover:text-red-300",
   success: "bg-success-100 text-success-600 hover:bg-success-100/80 dark:bg-success-600/20 dark:text-success-500 dark:hover:bg-success-600/30",
 };
 

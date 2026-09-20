@@ -49,13 +49,14 @@ function PlacementDetailPage() {
               <DetailRow label="Date" value={formatShortDate(event.date)} />
               <DetailRow label="Time" value={event.time} />
               <DetailRow label="Package / CTC" value={event.package} />
-              <DetailRow label="Requirements" value={event.requirements} />
+              <DetailRow label="Requirements" value={event.requirements} html />
               <DetailRow
                 label="Selection Process"
                 value={event.selectionProcess}
+                html
               />
-              <DetailRow label="What to Prepare" value={event.whatToPrepare} />
-              <DetailRow label="Additional Notes" value={event.notes} />
+              <DetailRow label="What to Prepare" value={event.whatToPrepare} html />
+              <DetailRow label="Additional Notes" value={event.notes} html />
             </div>
           </Card>
 

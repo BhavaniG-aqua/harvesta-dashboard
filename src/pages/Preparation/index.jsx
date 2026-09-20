@@ -1,18 +1,22 @@
 import { useMemo, useState } from "react";
 import PageHeader from "../../components/common/PageHeader";
 import PreparationTabs from "../../components/preparation/PreparationTabs";
-import CategoryTabs from "../../components/preparation/CategoryTabs";
 import StatusFilterTabs from "../../components/preparation/StatusFilterTabs";
-import TopicItem from "../../components/preparation/TopicItem";
-import ManageCategoriesPanel from "../../components/preparation/ManageCategoriesPanel";
+import TopicGroup from "../../components/preparation/TopicGroup";
+import AddTopicForm from "../../components/preparation/AddTopicForm";
 import InlineAddForm from "../../components/common/InlineAddForm";
-import Button from "../../components/common/Button";
 import EmptyState from "../../components/common/EmptyState";
-import { usePreparationData } from "../../hooks/usePreparationData";
+import { usePreparationContext } from "../../services/PreparationContext";
+import { usePlacementsContext } from "../../services/PlacementsContext";
+import { OTHERS_CATEGORY_ID } from "../../hooks/usePreparationData";
 
-function PreparationTopicsPage() {
+// Preparation home: Categories -> Topics hierarchy. Each interview may
+// need different topics, so categories keep those topics grouped and
+// easy to scan instead of one long scattered list.
+function PreparationCategoriesPage() {
   const {
     categories,
+    companies,
     topics,
     addCategory,
     renameCategory,
@@ -21,38 +25,45 @@ function PreparationTopicsPage() {
     renameTopic,
     updateTopicStatus,
     deleteTopic,
-  } = usePreparationData();
+  } = usePreparationContext();
+  const { events } = usePlacementsContext();
 
-  const [activeCategoryId, setActiveCategoryId] = useState(null);
-  const [activeStatus, setActiveStatus] = useState("ALL");
-  const [managingCategories, setManagingCategories] = useState(false);
+  const placementCompanyNames = useMemo(
+    () => [...new Set(events.map((e) => e.company).filter(Boolean))],
+    [events]
+  );
 
-  const filteredTopics = useMemo(() => {
-    return topics.filter((t) => {
-      const matchesCategory =
-        activeCategoryId === null || t.categoryId === activeCategoryId;
-      const matchesStatus = activeStatus === "ALL" || t.status === activeStatus;
-      return matchesCategory && matchesStatus;
-    });
-  }, [topics, activeCategoryId, activeStatus]);
+  const [activeStatus, setActiveStatus] = useState([]);
 
-  const statusCounts = useMemo(() => {
-    const scoped =
-      activeCategoryId === null
+  const statusCounts = useMemo(
+    () => ({
+      ALL: topics.length,
+      NEW: topics.filter((t) => t.status === "NEW").length,
+      COMPLETED: topics.filter((t) => t.status === "COMPLETED").length,
+      REVISE: topics.filter((t) => t.status === "REVISE").length,
+    }),
+    [topics]
+  );
+
+  const visibleTopics = useMemo(
+    () =>
+      activeStatus.length === 0
         ? topics
-        : topics.filter((t) => t.categoryId === activeCategoryId);
-    return {
-      ALL: scoped.length,
-      NEW: scoped.filter((t) => t.status === "NEW").length,
-      COMPLETED: scoped.filter((t) => t.status === "COMPLETED").length,
-      REVISE: scoped.filter((t) => t.status === "REVISE").length,
-    };
-  }, [topics, activeCategoryId]);
+        : topics.filter((t) => activeStatus.includes(t.status)),
+    [topics, activeStatus]
+  );
 
-  function handleAddTopic(name) {
-    const categoryId = activeCategoryId ?? categories[0]?.id;
-    if (!categoryId) return;
-    addTopic(categoryId, name);
+  // Sort so "Others" always appears last.
+  const orderedCategories = useMemo(() => {
+    return [...categories].sort((a, b) => {
+      if (a.id === OTHERS_CATEGORY_ID) return 1;
+      if (b.id === OTHERS_CATEGORY_ID) return -1;
+      return a.name.localeCompare(b.name);
+    });
+  }, [categories]);
+
+  function handleAddTopic({ name, categoryId, categoryName, companyIds, companyNames, companyName }) {
+    addTopic({ name, categoryId, categoryName, companyIds, companyNames, companyName });
   }
 
   return (
@@ -60,75 +71,61 @@ function PreparationTopicsPage() {
       <PageHeader title="Preparation" subtitle="Track your core prep topics" />
       <PreparationTabs />
 
-      <div className="mb-4">
-        <CategoryTabs
-          categories={categories}
-          activeId={activeCategoryId}
-          onChange={setActiveCategoryId}
-        />
-      </div>
-
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <StatusFilterTabs
-          active={activeStatus}
-          onChange={setActiveStatus}
-          counts={statusCounts}
-        />
+        <StatusFilterTabs active={activeStatus} onChange={setActiveStatus} counts={statusCounts} />
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="mb-5 flex flex-wrap gap-2">
         <InlineAddForm
           placeholder="New category name"
           buttonLabel="+ Category"
           onSubmit={addCategory}
         />
-        <InlineAddForm
-          placeholder="New topic name"
-          buttonLabel="+ Topic"
-          onSubmit={handleAddTopic}
-        />
-        <Button
-          variant="secondary"
-          onClick={() => setManagingCategories((v) => !v)}
-        >
-          {managingCategories ? "Done" : "⚙️ Manage Categories"}
-        </Button>
       </div>
 
-      {managingCategories ? (
-        <div className="mb-4">
-          <ManageCategoriesPanel
-            categories={categories}
-            onRename={renameCategory}
-            onDelete={(id) => {
-              deleteCategory(id);
-              if (activeCategoryId === id) setActiveCategoryId(null);
-            }}
-          />
-        </div>
-      ) : null}
+      <div className="mb-5">
+        <AddTopicForm
+          categories={categories}
+          companies={companies}
+          placementCompanyNames={placementCompanyNames}
+          onSubmit={handleAddTopic}
+        />
+      </div>
 
-      {filteredTopics.length === 0 ? (
+      {orderedCategories.length === 0 ? (
         <EmptyState
           icon="🎯"
-          title="No topics here yet"
-          description="Add a topic to start tracking its preparation status."
+          title="No categories yet"
+          description="Add a category, e.g. 'Power Systems', then add topics under it."
         />
       ) : (
-        <div className="flex flex-col gap-3">
-          {filteredTopics.map((topic) => (
-            <TopicItem
-              key={topic.id}
-              topic={topic}
+        orderedCategories.map((cat) => {
+          const catTopics = visibleTopics.filter((t) => t.categoryId === cat.id);
+          if (activeStatus.length > 0 && catTopics.length === 0) return null;
+          return (
+            <TopicGroup
+              key={cat.id}
+              title={cat.name}
+              topics={catTopics}
               onStatusChange={updateTopicStatus}
               onDelete={deleteTopic}
               onRename={renameTopic}
+              onRenameGroup={
+                cat.id === OTHERS_CATEGORY_ID
+                  ? undefined
+                  : (name) => renameCategory(cat.id, name)
+              }
+              onDeleteGroup={
+                cat.id === OTHERS_CATEGORY_ID ? undefined : () => deleteCategory(cat.id)
+              }
+              deletable={cat.id !== OTHERS_CATEGORY_ID}
+              emptyLabel="No topics in this category yet."
             />
-          ))}
-        </div>
+          );
+        })
       )}
     </div>
   );
 }
 
-export default PreparationTopicsPage;
+export default PreparationCategoriesPage;
